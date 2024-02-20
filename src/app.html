@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="%sveltekit.assets%/certificate-outline.svg" type="image/svg+xml" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="preload" href="/smui.css" as="style" />
+		<link rel="preload" href="/smui-dark.css" as="style" />
+		<style type="text/css">
+			html,
+			body {
+				padding: 0;
+				margin: 0;
+				height: 100%;
+				overflow: hidden;
+			}
+
+			.loader {
+				border: 8px solid #f3f3f3;
+				border-top: 8px solid #3f7faf;
+				border-radius: 50%;
+				animation: spin 2s linear infinite;
+				position: absolute;
+				width: 60px;
+				height: 60px;
+				top: 50%;
+				left: 50%;
+				margin-top: -30px;
+				margin-left: -30px;
+			}
+
+			@keyframes spin {
+				0% {
+					transform: rotate(0deg);
+				}
+
+				100% {
+					transform: rotate(360deg);
+				}
+			}
+		</style>
+		%sveltekit.head%
+	</head>
+
+	<body>
+		<noscript>This website requires JavaScript.</noscript>
+		<div style="display: contents">
+			<div class="loader"></div>
+			%sveltekit.body%
+		</div>
+	</body>
+</html>

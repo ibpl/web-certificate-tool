@@ -1,0 +1,15 @@
+{
+	"confirmPageLeaving": "Confirm Page Leaving",
+	"details": "Details",
+	"error": "Error",
+	"errorFetch": "Error communicating with server.",
+	"no": "No",
+	"ok": "OK",
+	"operation": "Operation",
+	"pageLeaveConfirmation": "The changes that you made won't be saved! Are you sure that you want to leave the current page?",
+	"pageNotFound": "Requested page does not exist.",
+	"unknownError": "Unknown error.",
+	"url": "URL",
+	"webCertificateTool": "Web Certificate Tool",
+	"yes": "Yes"
+}

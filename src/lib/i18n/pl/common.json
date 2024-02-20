@@ -1,0 +1,15 @@
+{
+	"confirmPageLeaving": "Potwierdź opuszczenie strony",
+	"details": "Szczegóły",
+	"error": "Błąd",
+	"errorFetch": "Błąd komunikacji z serwerem.",
+	"no": "Nie",
+	"ok": "OK",
+	"operation": "Operacja",
+	"pageLeaveConfirmation": "Wykonane przez ciebie zmiany nie zostaną zapisane! Czy na pewno chcesz opuścić bieżącą stronę?",
+	"pageNotFound": "Strona o podanym adresie nie istnieje.",
+	"unknownError": "Nieznany błąd.",
+	"url": "URL",
+	"webCertificateTool": "Webowe narzędzie do certyfikatów",
+	"yes": "Tak"
+}
