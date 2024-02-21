@@ -17,7 +17,7 @@ git clone https://github.com/ibpl/web-certrificate-tool
 
 ## Building
 
-Building this project requires a working, up-to-date `make`, `npm` and `sed`.
+Building this project requires a working, up-to-date `make`, `npm`, `pipx` and `sed`.
 
 All commands described below should be run in the root directory of the downloaded project.
 

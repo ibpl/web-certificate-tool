@@ -53,3 +53,4 @@ format: node_modules
 lint: node_modules
 	NODE_OPTIONS='' npm run lint
 	NODE_OPTIONS='' npm run check
+	pipx run reuse lint
