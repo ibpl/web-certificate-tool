@@ -13,7 +13,7 @@ export default defineConfig({
 
 		coverage: {
 			include: ['src/{lib,routes}/**/*.{js,ts,svelte}'],
-			exclude: ['src/routes/*', 'src/lib/i18n/**/*']
+			exclude: ['src/routes', 'src/lib/i18n']
 		}
 	}
 });
