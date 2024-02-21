@@ -29,8 +29,8 @@ audit:
 	npm audit
 
 # Update dependencies.
-.PHONY: dep-update
-dep-update:
+.PHONY: update
+update:
 	npm update --save
 
 # Run tests.

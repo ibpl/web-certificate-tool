@@ -34,7 +34,7 @@ make audit
 To update dependencies use
 
 ```
-make dep-update
+make update
 ```
 
 ### Development
