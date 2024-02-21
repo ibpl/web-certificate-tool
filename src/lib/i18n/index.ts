@@ -10,7 +10,9 @@ import lang from './lang.json';
 // rtlLocales contains list of locale names to be displayed in rtl direction.
 const rtlLocales = ['ar'];
 
-const config: Config = {
+const config: Config<{
+	/* Translation payload props */
+}> = {
 	parser: parser(),
 	initLocale: 'en',
 	fallbackLocale: 'en',
