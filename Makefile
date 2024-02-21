@@ -4,12 +4,14 @@
 # *** Remove all NODE_OPTIONS='' when https://github.com/sveltejs/kit/issues/9989 is fixed.
 
 # Build a production version.
-build: dep-install
+build: node_modules
+	npm run prepare
 	NODE_OPTIONS='' npm run build
 
 # Start development server and open application in web browser.
 .PHONY: dev
-dev: dep-install
+dev: node_modules
+	npm run prepare
 	NODE_OPTIONS='' npm run dev -- --open
 
 # Remove compiled and cached files (before building retry).
@@ -18,10 +20,8 @@ clean:
 	rm -rf .svelte-kit build node_modules
 
 # Install dependencies.
-.PHONY: dep-install
-dep-install:
+node_modules:
 	npm ci
-	npm run prepare
 
 # Run a security audit.
 .PHONY: audit
