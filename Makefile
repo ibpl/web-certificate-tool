@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://www.ib.pl>
 
+# *** Remove all NODE_OPTIONS='' when https://github.com/sveltejs/kit/issues/9989 is fixed.
+
 # Build a production version.
-# Remove NODE_OPTIONS='' when https://github.com/sveltejs/kit/issues/9989 is fixed.
 build: dep-install
 	NODE_OPTIONS='' npm run build
 
 # Start development server and open application in web browser.
-# Remove NODE_OPTIONS='' when https://github.com/sveltejs/kit/issues/9989 is fixed.
 .PHONY: dev
 dev: dep-install
 	NODE_OPTIONS='' npm run dev -- --open
