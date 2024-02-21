@@ -10,7 +10,6 @@ export default defineConfig({
 		environment: 'jsdom',
 		globals: true,
 		include: ['src/**/*.{test,spec}.{js,ts}'],
-
 		coverage: {
 			include: ['src/{lib,routes}/**/*.{js,ts,svelte}'],
 			exclude: ['src/routes', 'src/lib/i18n']
