@@ -25,31 +25,31 @@ node_modules:
 
 # Run a security audit.
 .PHONY: audit
-audit:
+audit: node_modules
 	npm audit
 
 # Update dependencies.
 .PHONY: update
-update:
+update: node_modules
 	npm update --save
 
 # Run tests.
 .PHONY: test
-test:
+test: node_modules
 	NODE_OPTIONS='' npm run test
 
 # Code coverage.
 .PHONY: coverage
-coverage:
+coverage: node_modules
 	NODE_OPTIONS='' npm run coverage
 
 # Format code.
 .PHONY: format
-format:
+format: node_modules
 	NODE_OPTIONS='' npm run format
 
 # Lint code.
 .PHONY: lint
-lint:
+lint: node_modules
 	NODE_OPTIONS='' npm run lint
 	NODE_OPTIONS='' npm run check
