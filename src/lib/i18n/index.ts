@@ -17,7 +17,6 @@ const config: Config<{
 	initLocale: 'en',
 	fallbackLocale: 'en',
 	translations: {
-		ar: { lang },
 		en: { lang },
 		pl: { lang }
 	},

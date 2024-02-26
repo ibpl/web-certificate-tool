@@ -4,39 +4,162 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 -->
 
 <script lang="ts">
-	import { t } from '$lib/i18n';
+	import { t, locale, locales } from '$lib/i18n';
 	import ErrorBanner from '$lib/components/common/ErrorBanner.svelte';
+	import Button, { Icon, Label } from '@smui/button';
+	import Menu from '@smui/menu';
+	import List, { Item, Text } from '@smui/list';
+	import { settings } from '$lib/stores';
+	import {
+		mdiWhiteBalanceSunny,
+		mdiWeatherNight,
+		mdiThemeLightDark,
+		mdiMenuDown,
+		mdiWeb
+	} from '@mdi/js';
 
 	// title is string displayed in bar.
 	export let title = '';
+
 	// contentEnabled allows disabling access to all controls on page content when set to false.
 	export let contentEnabled = true;
 
 	// errorBanner is error message to be displayed in banner.
 	export let errorBanner: string | undefined = undefined;
+
+	// themeModes contains all avalable theme mode selections.
+	const themeModes = [
+		{ id: 1, name: 'common.themeModeLight', icon: mdiWhiteBalanceSunny, darkTheme: false },
+		{
+			id: 2,
+			name: 'common.themeModeSystem',
+			icon: mdiThemeLightDark,
+			darkTheme: undefined
+		},
+		{ id: 3, name: 'common.themeModeDark', icon: mdiWeatherNight, darkTheme: true }
+	];
+
+	// selectedThemeMode is selected theme mode (system by default).
+	let selectedThemeMode = themeModes[1];
+	if ($settings.darkTheme === false) {
+		selectedThemeMode = themeModes[0];
+	}
+	if ($settings.darkTheme === true) {
+		selectedThemeMode = themeModes[2];
+	}
+
+	// Update settings store on settings change in UI.
+	$: {
+		if ($settings.darkTheme != selectedThemeMode.darkTheme || $settings.locale != $locale) {
+			$settings.darkTheme = selectedThemeMode.darkTheme;
+			$settings.locale = $locale;
+		}
+	}
+
+	let menuLanguage: Menu; // menuLanguage is menu with available UI languages.
+	let menuThemeMode: Menu; // menuThemeMode is menu with avalilable UI theme modes.
 </script>
 
 <svelte:head>
 	<title>{title ? title + ' • ' : ''}{$t('common.webCertificateTool')}</title>
 </svelte:head>
 
+<!-- Display error banner if errorBanner is not empty. -->
 <ErrorBanner bind:message={errorBanner} />
+
+<!-- Greyout page content if disabled. -->
 <div class="page-content{contentEnabled ? '' : ' disabled'}" style="padding: 0rem 1rem 2rem 1rem;">
-	<slot />
+	<div
+		style="display: flex; justify-content: flex-end; align-items: baseline; flex-wrap: wrap-reverse;"
+	>
+		<!-- Page title to be displayed on the left in the top bar row. -->
+		<div style="flex-grow: 1;"><h6>{title ? title : $t('common.webCertificateTool')}</h6></div>
+		<!-- Menu buttons to be displayed on the right in the top bar row. Wraps as the first on small screens. -->
+		<div style="display: flex; justify-content: flex-end; align-items: baseline; margin-top: 1rem;">
+			<!-- Language change button and menu. -->
+			<div class="menu-button">
+				<Button
+					title={$t('common.changeLanguage')}
+					on:click={() => menuLanguage.setOpen(true)}
+					variant="outlined"
+					style="padding: 0; min-width: 70px;"
+				>
+					<Icon tag="svg" style="width: 1em; height: auto; margin: 0 5px;" viewBox="0 0 24 24">
+						<path fill="currentColor" d={mdiWeb} />
+					</Icon>
+					<Label>{$locale}</Label>
+					<Icon tag="svg" style="width: 1em; height: auto; margin: 0;" viewBox="0 0 24 24">
+						<path fill="currentColor" d={mdiMenuDown} />
+					</Icon>
+				</Button>
+				<Menu bind:this={menuLanguage} anchorCorner="BOTTOM_START">
+					<List>
+						{#each $locales as l}
+							<Item
+								on:SMUI:action={() => {
+									$locale = l;
+								}}
+							>
+								<Text>{$t(`lang.${l}`)}</Text>
+							</Item>
+						{/each}
+					</List>
+				</Menu>
+			</div>
+			<!-- Theme mode change button and menu. -->
+			<div class="menu-button">
+				<Button
+					title={$t('common.changeThemeMode')}
+					on:click={() => menuThemeMode.setOpen(true)}
+					variant="outlined"
+					style="padding: 0; min-width: 60px;"
+				>
+					<Icon tag="svg" style="width: 1em; height: auto; margin: 0;" viewBox="0 0 24 24">
+						<path fill="currentColor" d={selectedThemeMode.icon} />
+					</Icon>
+					<Icon tag="svg" style="width: 1em; height: auto; margin: 0;" viewBox="0 0 24 24">
+						<path fill="currentColor" d={mdiMenuDown} />
+					</Icon>
+				</Button>
+				<Menu bind:this={menuThemeMode} anchorCorner="BOTTOM_START">
+					<List>
+						{#each themeModes as themeMode}
+							<Item on:SMUI:action={() => (selectedThemeMode = themeMode)}>
+								<Icon
+									tag="svg"
+									style="width: 1em; height: auto; margin: 0px 5px 0px 0px"
+									viewBox="0 0 24 24"
+								>
+									<path fill="currentColor" d={themeMode.icon} />
+								</Icon>
+								<Text>{$t(themeMode.name)}</Text>
+							</Item>
+						{/each}
+					</List>
+				</Menu>
+			</div>
+		</div>
+	</div>
+	<div>
+		<!--  Page main content. -->
+		<slot />
+	</div>
 </div>
 
 {#if !contentEnabled}
+	<!-- When rendered, blocks input on whole screen.  -->
 	<div class="input-blocker" />
 {/if}
 
 <style>
 	.page-content {
 		overflow: auto;
-		flex-basis: 0;
 		height: 100%;
-		flex-grow: 1;
 		opacity: 1;
 		transition: opacity 0.2s;
+	}
+	.menu-button {
+		margin: 0px 0px 0px 5px;
 	}
 	.disabled {
 		opacity: 0.5;

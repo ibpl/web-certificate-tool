@@ -1,4 +1,6 @@
 {
+	"changeLanguage": "Change language",
+	"changeThemeMode": "Change theme mode",
 	"confirmPageLeaving": "Confirm Page Leaving",
 	"details": "Details",
 	"error": "Error",
@@ -8,6 +10,9 @@
 	"operation": "Operation",
 	"pageLeaveConfirmation": "The changes that you made won't be saved! Are you sure that you want to leave the current page?",
 	"pageNotFound": "Requested page does not exist.",
+	"themeModeDark": "Dark",
+	"themeModeLight": "Light",
+	"themeModeSystem": "System",
 	"unknownError": "Unknown error.",
 	"url": "URL",
 	"webCertificateTool": "Web Certificate Tool",
