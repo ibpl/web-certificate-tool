@@ -7,6 +7,8 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	import { t } from '$lib/i18n';
 	import ErrorBanner from '$lib/components/common/ErrorBanner.svelte';
 
+	// title is string displayed in bar.
+	export let title = '';
 	// contentEnabled allows disabling access to all controls on page content when set to false.
 	export let contentEnabled = true;
 
@@ -15,7 +17,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 </script>
 
 <svelte:head>
-	<title>{$t('common.webCertificateTool')}</title>
+	<title>{title ? title + ' • ' : ''}{$t('common.webCertificateTool')}</title>
 </svelte:head>
 
 <ErrorBanner bind:message={errorBanner} />
