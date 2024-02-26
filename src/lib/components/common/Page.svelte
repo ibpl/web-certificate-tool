@@ -23,6 +23,10 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	<slot />
 </div>
 
+{#if !contentEnabled}
+	<div class="input-blocker" />
+{/if}
+
 <style>
 	.page-content {
 		overflow: auto;
@@ -32,9 +36,18 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 		opacity: 1;
 		transition: opacity 0.2s;
 	}
-
 	.disabled {
 		opacity: 0.5;
 		transition: opacity 0.2s;
+	}
+	.input-blocker {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		padding: 0;
+		margin: 0;
+		opacity: 1;
 	}
 </style>
