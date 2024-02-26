@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://www.ib.pl>
 
 import { writable } from 'svelte/store';
-import type { UISettings } from '$lib/common';
+import type { Settings } from '$lib/common';
 
 // progressOpen is true when top progress bar is enabled.
 export const progressOpen = writable<boolean>(false);
@@ -14,7 +14,7 @@ export const progressOpen = writable<boolean>(false);
 export const smallWindow = writable<boolean | undefined>(undefined);
 
 // Current UI settings.
-export const uiSettings = writable<UISettings>({
+export const settings = writable<Settings>({
 	darkTheme: undefined, // Browser default theme mode.
 	locale: '' // Browser default locale.
 });

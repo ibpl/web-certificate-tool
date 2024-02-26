@@ -2,13 +2,13 @@
 // SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://www.ib.pl>
 
 import { loadTranslations } from '$lib/i18n';
-import { uiSettings } from '$lib/stores';
+import { settings } from '$lib/stores';
 import { get } from 'svelte/store';
 import { t } from '$lib/i18n';
 import { convertToAppError } from '$lib/errors';
 
-// UISettings defines users UI settings.
-export type UISettings = {
+// Settings defines users UI settings.
+export type Settings = {
 	// darkTheme allows to set application theme mode:
 	// 	when true - dark theme is used,convertToAppError
 	// 	when false - light theme is used,
@@ -19,10 +19,10 @@ export type UISettings = {
 	locale: string;
 };
 
-// isUISettings is UISettings type guard.
-export function isUISettings(arg: unknown): arg is UISettings {
+// isSettings is Settings type guard.
+export function isSettings(arg: unknown): arg is Settings {
 	// Falsy (https://developer.mozilla.org/en-US/docs/Glossary/Falsy)
-	// or something not object type is not a UISettings.
+	// or something not object type is not a Settings.
 	if (!arg || typeof arg !== 'object') {
 		return false;
 	}
@@ -37,19 +37,19 @@ export function isUISettings(arg: unknown): arg is UISettings {
 		return false;
 	}
 
-	// All checks passed so we assume it's UISettings.
+	// All checks passed so we assume it's Settings.
 	return true;
 }
 
-// initUISettings initializes UI settings.
-function initUISettings() {
+// initSettings initializes UI settings.
+function initSettings() {
 	// Use current settings as start point.
-	const uiSettingsNew = get(uiSettings);
+	const settingsNew = get(settings);
 
 	// Set default browser locale if not specified already.
-	if (uiSettingsNew.locale === '') {
-		uiSettingsNew.locale = window.navigator.language;
-		uiSettings.set(uiSettingsNew);
+	if (settingsNew.locale === '') {
+		settingsNew.locale = window.navigator.language;
+		settings.set(settingsNew);
 	}
 }
 
@@ -72,11 +72,10 @@ async function initializeEnvironmentInternal(path: string) {
 	}
 
 	// Initialize UI settings.
-	initUISettings();
+	initSettings();
 
 	// Load translations based on locale from UI settings.
-	const settings = get(uiSettings);
-	await loadTranslations(settings.locale, path);
+	await loadTranslations(get(settings).locale, path);
 }
 
 // initializeEnvironment initializes application environment for given path with

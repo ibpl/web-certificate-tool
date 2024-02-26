@@ -13,7 +13,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 
 	// Import components.
 	import { navigating } from '$app/stores';
-	import { uiSettings, smallWindow, progressOpen } from '$lib/stores';
+	import { settings, smallWindow, progressOpen } from '$lib/stores';
 	import { dir, locale } from '$lib/i18n';
 	import { onMount } from 'svelte';
 	import ProgressBar from '$lib/components/common/ProgressBar.svelte';
@@ -50,10 +50,10 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	   <link rel="preload" href="/smui-dark.css" as="style" />
 	...to avoid FOUC on page load. -->
 <svelte:head>
-	{#if $uiSettings.darkTheme === undefined}
+	{#if $settings.darkTheme === undefined}
 		<link rel="stylesheet" href="/smui.css" media="(prefers-color-scheme: light)" />
 		<link rel="stylesheet" href="/smui-dark.css" media="screen and (prefers-color-scheme: dark)" />
-	{:else if $uiSettings.darkTheme}
+	{:else if $settings.darkTheme}
 		<link rel="stylesheet" href="/smui.css" />
 		<link rel="stylesheet" href="/smui-dark.css" media="screen" />
 	{:else}
