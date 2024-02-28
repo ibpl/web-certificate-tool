@@ -79,9 +79,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 				<Button
 					data-testid="button-language"
 					title={$t('common.changeLanguage')}
-					on:click={() => {
-						$locale = 'pl';
-					}}
+					on:click={() => menuLanguage.setOpen(true)}
 					variant="outlined"
 					style="padding: 0; min-width: 70px;"
 				>
