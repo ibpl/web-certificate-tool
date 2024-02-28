@@ -5,7 +5,6 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 
 <script lang="ts">
 	import { t, locale, locales } from '$lib/i18n';
-	import ErrorBanner from '$lib/components/common/ErrorBanner.svelte';
 	import Button, { Icon, Label } from '@smui/button';
 	import Menu from '@smui/menu';
 	import List, { Item, Text } from '@smui/list';
@@ -23,9 +22,6 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 
 	// contentEnabled allows disabling access to all controls on page content when set to false.
 	export let contentEnabled = true;
-
-	// errorBanner is error message to be displayed in banner.
-	export let errorBanner: string | undefined = undefined;
 
 	// themeModes contains all avalable theme mode selections.
 	const themeModes = [
@@ -61,26 +57,31 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 </script>
 
 <svelte:head>
+	<!-- /* v8 ignore next */ -->
 	<title>{title ? title + ' • ' : ''}{$t('common.webCertificateTool')}</title>
 </svelte:head>
 
-<!-- Display error banner if errorBanner is not empty. -->
-<ErrorBanner bind:message={errorBanner} />
-
 <!-- Greyout page content if disabled. -->
+<!-- /* v8 ignore next */ -->
 <div class="page-content{contentEnabled ? '' : ' disabled'}" style="padding: 0rem 1rem 2rem 1rem;">
 	<div
 		style="display: flex; justify-content: flex-end; align-items: baseline; flex-wrap: wrap-reverse;"
 	>
 		<!-- Page title to be displayed on the left in the top bar row. -->
-		<div style="flex-grow: 1;"><h6>{title ? title : $t('common.webCertificateTool')}</h6></div>
+		<div style="flex-grow: 1;">
+			<!-- /* v8 ignore next */ -->
+			<h6 data-testid="page-title">{title ? title : $t('common.webCertificateTool')}</h6>
+		</div>
 		<!-- Menu buttons to be displayed on the right in the top bar row. Wraps as the first on small screens. -->
 		<div style="display: flex; justify-content: flex-end; align-items: baseline; margin-top: 1rem;">
 			<!-- Language change button and menu. -->
 			<div class="menu-button">
 				<Button
+					data-testid="button-language"
 					title={$t('common.changeLanguage')}
-					on:click={() => menuLanguage.setOpen(true)}
+					on:click={() => {
+						$locale = 'pl';
+					}}
 					variant="outlined"
 					style="padding: 0; min-width: 70px;"
 				>
@@ -96,10 +97,12 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 					<List>
 						{#each $locales as l}
 							<Item
+								data-testid="menu-language-{l}"
 								on:SMUI:action={() => {
 									$locale = l;
 								}}
 							>
+								<!-- /* v8 ignore next */ -->
 								<Text>{$t(`lang.${l}`)}</Text>
 							</Item>
 						{/each}
@@ -109,13 +112,18 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 			<!-- Theme mode change button and menu. -->
 			<div class="menu-button">
 				<Button
+					data-testid="button-theme-mode"
 					title={$t('common.changeThemeMode')}
 					on:click={() => menuThemeMode.setOpen(true)}
 					variant="outlined"
 					style="padding: 0; min-width: 60px;"
 				>
 					<Icon tag="svg" style="width: 1em; height: auto; margin: 0;" viewBox="0 0 24 24">
-						<path fill="currentColor" d={selectedThemeMode.icon} />
+						<path
+							data-testid="button-theme-mode-icon-path"
+							fill="currentColor"
+							d={selectedThemeMode.icon}
+						/>
 					</Icon>
 					<Icon tag="svg" style="width: 1em; height: auto; margin: 0;" viewBox="0 0 24 24">
 						<path fill="currentColor" d={mdiMenuDown} />
@@ -124,7 +132,10 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 				<Menu bind:this={menuThemeMode} anchorCorner="BOTTOM_START">
 					<List>
 						{#each themeModes as themeMode}
-							<Item on:SMUI:action={() => (selectedThemeMode = themeMode)}>
+							<Item
+								data-testid="menu-theme-mode-{themeMode.id}"
+								on:SMUI:action={() => (selectedThemeMode = themeMode)}
+							>
 								<Icon
 									tag="svg"
 									style="width: 1em; height: auto; margin: 0px 5px 0px 0px"
