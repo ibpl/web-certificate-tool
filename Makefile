@@ -17,7 +17,7 @@ dev: node_modules
 # Remove compiled and cached files (before building retry).
 .PHONY: clean
 clean:
-	rm -rf .svelte-kit build node_modules
+	rm -rf .svelte-kit coverage build node_modules
 
 # Install dependencies.
 node_modules:
