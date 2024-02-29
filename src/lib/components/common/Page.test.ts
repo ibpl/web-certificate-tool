@@ -9,7 +9,6 @@ import { mdiWhiteBalanceSunny, mdiWeatherNight, mdiThemeLightDark } from '@mdi/j
 describe('Page', () => {
 	test('page with enabled content is rendered correctly', () => {
 		const { container } = render(Page, { props: { contentEnabled: true } });
-
 		const div = container.querySelector('.disabled');
 		expect(div).toBeFalsy();
 	});
@@ -43,15 +42,14 @@ describe('Page', () => {
 
 		// PL
 		await user.click(buttonLanguage);
-		const menuLanguagePL = screen.getByTestId('menu-language-pl');
-		await user.click(menuLanguagePL);
-		expect(title.innerHTML).toBe('Webowe narzędzie do certyfikatów');
+		await user.click(screen.getByTestId('menu-language-pl'));
+		await vi.waitFor(() => expect(title.innerHTML).toBe('Webowe narzędzie do certyfikatów'));
 
 		// EN
 		await user.click(buttonLanguage);
 		const menuLanguageEN = screen.getByTestId('menu-language-en');
 		await user.click(menuLanguageEN);
-		expect(title.innerHTML).toBe('Web Certificate Tool');
+		await vi.waitFor(() => expect(title.innerHTML).toBe('Web Certificate Tool'));
 	});
 
 	test('theme mode changing works', async () => {
@@ -63,16 +61,20 @@ describe('Page', () => {
 		// Light theme mode.
 		await user.click(buttonThemeMode);
 		await user.click(screen.getByTestId('menu-theme-mode-1'));
-		expect(buttonThemeModeIconPath.getAttribute('d')).toBe(mdiWhiteBalanceSunny);
+		await vi.waitFor(() =>
+			expect(buttonThemeModeIconPath.getAttribute('d')).toBe(mdiWhiteBalanceSunny)
+		);
 
 		// System theme mode.
 		await user.click(buttonThemeMode);
 		await user.click(screen.getByTestId('menu-theme-mode-2'));
-		expect(buttonThemeModeIconPath.getAttribute('d')).toBe(mdiThemeLightDark);
+		await vi.waitFor(() =>
+			expect(buttonThemeModeIconPath.getAttribute('d')).toBe(mdiThemeLightDark)
+		);
 
 		// Dark theme mode.
 		await user.click(buttonThemeMode);
 		await user.click(screen.getByTestId('menu-theme-mode-3'));
-		expect(buttonThemeModeIconPath.getAttribute('d')).toBe(mdiWeatherNight);
+		await vi.waitFor(() => expect(buttonThemeModeIconPath.getAttribute('d')).toBe(mdiWeatherNight));
 	});
 });

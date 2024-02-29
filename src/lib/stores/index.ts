@@ -13,10 +13,13 @@ export const progressOpen = writable<boolean>(false);
 // page until window object is available to detect resolution.
 export const smallWindow = writable<boolean | undefined>(undefined);
 
-// Current UI settings.
+// settingsInitialized is true when application settings has been initialized.
+export const settingsInitialized = writable<boolean>(false);
+
+// settings is application settings.
 export const settings = writable<Settings>({
-	darkTheme: undefined, // Browser default theme mode.
-	locale: '' // Browser default locale.
+	darkTheme: undefined, // System theme mode by default.
+	locale: '' // Browser locale by default.
 });
 
 // unsavedDataExists is true when unsave data is present on page (used

@@ -153,6 +153,15 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 		<!--  Page main content. -->
 		<slot />
 	</div>
+
+	<!-- Footer -->
+	<div class="mdc-theme--secondary" style="text-align: right">
+		<small
+			><!-- eslint-disable-line svelte/no-at-html-tags -->{@html $t('common.licenseInfo', {
+				url: 'https://github.com/ibpl/web-certificate-tool'
+			})}</small
+		>
+	</div>
 </div>
 
 {#if !contentEnabled}

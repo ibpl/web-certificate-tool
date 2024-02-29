@@ -101,6 +101,34 @@ make
 
 The application files ready to be copied to production webserver will be in the `build` subdirectory.
 
+`build` subdirecotry contains uncompressed application files and its gzip and brotli precompressed equivalents for web servers and web clients that are able to use precompressed versions for faster optimization.
+
+## Installation
+
+After successful build, copy files from `build` subdirectory to directory served (as static content) over HTTPS (i.e. by [Apache](https://httpd.apache.org/)) and access it using up-to-date web browser with JavaScript enabled.
+
+For better security cosider serving all application files with [response security headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) that disallow application to connect to any external services i.e.
+
+```
+Content-Security-Policy: default-src 'self'
+```
+
+## Configuration
+
+Optional `config.json` file may be placed in application's root folder with the following parameters:
+
+- `darkTheme` [boolean]: forces initial theme mode to be light (when `false`) or dark (when `true`); when not defined user's system default theme mode will be used,
+- `locale` [string]: forces specified initial locale to be one of [supported locales](src/lib/i18n/lang.json); when not defined user's browser default locale will be used.
+
+Example `config.json` content:
+
+```
+{
+	"darkTheme": false,
+	"locale": "pl"
+}
+```
+
 ## Licenses
 
 Content in this repository is licensed under the [GNU Affero General Public License Version 3 (AGPL v3)](LICENSES/AGPL-3.0-only.txt). Other licenses may be specified as well where third-party content is used.
