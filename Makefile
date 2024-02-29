@@ -36,7 +36,7 @@ update: node_modules
 # Run tests.
 .PHONY: test
 test: node_modules
-	NODE_OPTIONS='' npm run test
+	NODE_OPTIONS='' npm run test $(filter)
 
 # Code coverage.
 .PHONY: coverage

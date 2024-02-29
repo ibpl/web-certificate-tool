@@ -71,11 +71,21 @@ make coverage
 
 ### Testing
 
-To run tests use
+To run all tests use
 
 ```
 make test
 ```
+
+To run only the test files that contain `components/common` in their paths add `filter` like this
+
+```
+make test filter=components/common
+```
+
+`filter` only checks inclusion and doesn't support regexp or glob patterns (unless your terminal processes it before make receives the `filter`).
+
+Testing will enter the watch mode in development environment and run mode in CI automatically.
 
 ### Production
 
