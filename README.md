@@ -77,15 +77,19 @@ To run all tests use
 make test
 ```
 
-To run only the test files that contain `components/common` in their paths add `filter` like this
+To run only the test files that contain `components/common` in their path add `path` like this
 
 ```
-make test filter=components/common
+make test path=components/common
 ```
 
-`filter` only checks inclusion and doesn't support regexp or glob patterns (unless your terminal processes it before make receives the `filter`).
+`path` only checks inclusion and doesn't support regexp or glob patterns (unless your terminal processes it before make receives the `path`).
 
-Testing will enter the watch mode in development environment and run mode in CI automatically.
+When `WATCH=1` is set in the environment, test will enter the watch mode, i.e.
+
+```
+WATCH=1 make test
+```
 
 ### Production
 
