@@ -4,10 +4,10 @@
 # *** Remove all NODE_OPTIONS='' when https://github.com/sveltejs/kit/issues/9989 is fixed.
 
 # Disable test watch mode if no WATCH=1 is set in environment.
-ifneq ($(WATCH),'1')
-	test_run_arg=run
+ifneq ($(WATCH),1)
+test_run_arg = run
 else
-	test_run_arg=
+test_run_arg =
 endif
 
 # Build a production version.
