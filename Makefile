@@ -24,7 +24,7 @@ dev: node_modules
 # Remove compiled and cached files (before building retry).
 .PHONY: clean
 clean:
-	rm -rf .svelte-kit coverage build node_modules
+	rm -rf .svelte-kit coverage build node_modules vite.config.ts.timestamp-*
 
 # Install dependencies.
 node_modules:
