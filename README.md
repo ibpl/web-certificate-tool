@@ -101,7 +101,7 @@ make
 
 The application files ready to be copied to production webserver will be in the `build` subdirectory.
 
-`build` subdirecotry contains uncompressed application files and its gzip and brotli precompressed equivalents for web servers and web clients that are able to use precompressed versions for faster optimization.
+`build` subdirectory contains uncompressed application files and its gzip and brotli precompressed equivalents for web servers and web clients that are able to use precompressed versions for download optimization.
 
 ## Installation
 
