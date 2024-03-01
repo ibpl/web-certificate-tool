@@ -53,7 +53,7 @@ async function tsFetch<T>(url: string, options = {}): Promise<T> {
 	try {
 		const controller = new AbortController();
 		const responsePromise = fetch(url, { ...options, signal: controller.signal });
-		const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+		const timeout = window.setTimeout(() => controller.abort(), FETCH_TIMEOUT);
 		response = await responsePromise;
 		clearTimeout(timeout);
 	} catch (e) {
