@@ -10,7 +10,7 @@ export const load = (async ({ url }) => {
 	// load function /i.e. t.get() may not work without it/. Errors thrown
 	// by this function are ignored in load() in root +layout.ts but should
 	// not be ignored in other places.
-	await initializeEnvironment(url.pathname);
+	await initializeEnvironment(url);
 
 	return {};
 }) satisfies PageLoad;

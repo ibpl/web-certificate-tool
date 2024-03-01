@@ -16,6 +16,8 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 		mdiMenuDown,
 		mdiWeb
 	} from '@mdi/js';
+	import { goto } from '$app/navigation';
+	import { browser } from '$app/environment';
 
 	// title is string displayed in bar.
 	export let title = '';
@@ -96,8 +98,20 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 						{#each $locales as l}
 							<Item
 								data-testid="menu-language-{l}"
-								on:SMUI:action={() => {
+								on:SMUI:action={async () => {
+									// Change locale.
 									$locale = l;
+
+									// Set locale as URL query parameter after user changes it manually.
+									// Don't execute in during unit tests as goto is not available there.
+									if (browser) {
+										const urlSearchParams = new URLSearchParams(window.location.search);
+										urlSearchParams.set('locale', l);
+										await goto('/?' + urlSearchParams.toString(), {
+											replaceState: true,
+											invalidateAll: false
+										});
+									}
 								}}
 							>
 								<!-- /* v8 ignore next */ -->
@@ -132,7 +146,31 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 						{#each themeModes as themeMode}
 							<Item
 								data-testid="menu-theme-mode-{themeMode.id}"
-								on:SMUI:action={() => (selectedThemeMode = themeMode)}
+								on:SMUI:action={async () => {
+									// Change theme mode.
+									selectedThemeMode = themeMode;
+
+									// Set theme mode as URL query parameter after user changes it manually.
+									// Don't execute in during unit tests as goto is not available there.
+									if (browser) {
+										const urlSearchParams = new URLSearchParams(window.location.search);
+										switch (themeMode.id) {
+											case 1:
+												urlSearchParams.set('dark_theme', '0');
+												break;
+											case 3:
+												urlSearchParams.set('dark_theme', '1');
+												break;
+											default:
+												urlSearchParams.delete('dark_theme');
+												break;
+										}
+										await goto('/?' + urlSearchParams.toString(), {
+											replaceState: true,
+											invalidateAll: false
+										});
+									}
+								}}
 							>
 								<Icon
 									tag="svg"

@@ -10,6 +10,7 @@ import {
 } from './index';
 import { server } from '../../../tests/vitest-setup';
 import { HttpResponse, http } from 'msw';
+import lang from '$lib/i18n/lang.json';
 
 // Configuration validation.
 describe('isValidConfig', () => {
@@ -44,7 +45,7 @@ describe('initializeEnvironment', () => {
 				return HttpResponse.error();
 			})
 		);
-		await expect(initializeEnvironment('/')).rejects.toThrowError(
+		await expect(initializeEnvironment(new URL(window.location.href))).rejects.toThrowError(
 			'Error communicating with server.'
 		);
 	});
@@ -59,7 +60,7 @@ describe('initializeEnvironment', () => {
 					return new HttpResponse(null, { status: 404 });
 				})
 			);
-			await expect(initializeEnvironment('/')).rejects.toThrowError(
+			await expect(initializeEnvironment(new URL(window.location.href))).rejects.toThrowError(
 				'Error communicating with server.'
 			);
 		},
@@ -81,7 +82,7 @@ describe('initializeEnvironment', () => {
 				);
 			})
 		);
-		await expect(initializeEnvironment('/')).rejects.toThrowError(
+		await expect(initializeEnvironment(new URL(window.location.href))).rejects.toThrowError(
 			'Error communicating with server.'
 		);
 	});
@@ -104,7 +105,9 @@ describe('initializeEnvironment', () => {
 					);
 				})
 			);
-			await expect(initializeEnvironment('/')).rejects.toThrowError('Bad response from server.');
+			await expect(initializeEnvironment(new URL(window.location.href))).rejects.toThrowError(
+				'Bad response from server.'
+			);
 		}
 	);
 
@@ -118,7 +121,9 @@ describe('initializeEnvironment', () => {
 				});
 			})
 		);
-		await expect(initializeEnvironment('/')).rejects.toThrowError('Bad response from server.');
+		await expect(initializeEnvironment(new URL(window.location.href))).rejects.toThrowError(
+			'Bad response from server.'
+		);
 	});
 
 	test('should throw error on invalid JSON in config.json', async () => {
@@ -131,7 +136,9 @@ describe('initializeEnvironment', () => {
 				});
 			})
 		);
-		await expect(initializeEnvironment('/')).rejects.toThrowError('Bad response from server.');
+		await expect(initializeEnvironment(new URL(window.location.href))).rejects.toThrowError(
+			'Bad response from server.'
+		);
 	});
 
 	test('should accept response status code 404 while fetching config.json', async () => {
@@ -143,7 +150,7 @@ describe('initializeEnvironment', () => {
 				});
 			})
 		);
-		await expect(initializeEnvironment('/')).resolves.toBe(undefined);
+		await expect(initializeEnvironment(new URL(window.location.href))).resolves.toBe(undefined);
 	});
 
 	test('should accept valid config.json without parameters', async () => {
@@ -154,7 +161,7 @@ describe('initializeEnvironment', () => {
 				});
 			})
 		);
-		await expect(initializeEnvironment('/')).resolves.toBe(undefined);
+		await expect(initializeEnvironment(new URL(window.location.href))).resolves.toBe(undefined);
 	});
 
 	test('should accept valid config.json with pl locale and light theme mode', async () => {
@@ -167,7 +174,7 @@ describe('initializeEnvironment', () => {
 				});
 			})
 		);
-		await expect(initializeEnvironment('/')).resolves.toBe(undefined);
+		await expect(initializeEnvironment(new URL(window.location.href))).resolves.toBe(undefined);
 	});
 
 	test('should accept valid config.json with en locale and dark theme mode', async () => {
@@ -179,7 +186,7 @@ describe('initializeEnvironment', () => {
 				});
 			})
 		);
-		await expect(initializeEnvironment('/')).resolves.toBe(undefined);
+		await expect(initializeEnvironment(new URL(window.location.href))).resolves.toBe(undefined);
 	});
 
 	test('should throw error on unsupported locale in config.json', async () => {
@@ -191,7 +198,7 @@ describe('initializeEnvironment', () => {
 				});
 			})
 		);
-		await expect(initializeEnvironment('/')).rejects.toThrowError(
+		await expect(initializeEnvironment(new URL(window.location.href))).rejects.toThrowError(
 			'Invalid configuration file content.'
 		);
 	});
@@ -205,7 +212,7 @@ describe('initializeEnvironment', () => {
 				});
 			})
 		);
-		await expect(initializeEnvironment('/')).rejects.toThrowError(
+		await expect(initializeEnvironment(new URL(window.location.href))).rejects.toThrowError(
 			'Invalid configuration file content.'
 		);
 	});
@@ -219,8 +226,50 @@ describe('initializeEnvironment', () => {
 				});
 			})
 		);
-		await expect(initializeEnvironment('/')).rejects.toThrowError(
+		await expect(initializeEnvironment(new URL(window.location.href))).rejects.toThrowError(
 			'Invalid configuration file content.'
 		);
+	});
+
+	test('should throw error on unsupported locale in query parameters', async () => {
+		server.use(
+			http.get('/config.json', () => {
+				return new HttpResponse(null, { status: 404 });
+			})
+		);
+		const url = new URL(window.location.href);
+		url.searchParams.set('dark_theme', '1');
+		url.searchParams.set('locale', 'fr');
+		await expect(initializeEnvironment(url)).rejects.toThrowError(
+			'Parameter locale value must be one of: ' + Object.keys(lang).join(', ') + '.'
+		);
+	});
+
+	test('should throw error on unsupported dark_theme in query parameters', async () => {
+		server.use(
+			http.get('/config.json', () => {
+				return new HttpResponse(null, { status: 404 });
+			})
+		);
+		const url = new URL(window.location.href);
+		url.searchParams.set('dark_theme', '2');
+		await expect(initializeEnvironment(url)).rejects.toThrowError(
+			'Parameter dark_theme value must be one of: 0, 1.'
+		);
+	});
+
+	test('should accept valid config.json and valid query parameters', async () => {
+		server.use(
+			http.get('/config.json', () => {
+				return HttpResponse.json({
+					darkTheme: true,
+					locale: 'en'
+				});
+			})
+		);
+		const url = new URL(window.location.href);
+		url.searchParams.set('dark_theme', '0');
+		url.searchParams.set('locale', 'pl');
+		await expect(initializeEnvironment(url)).resolves.toBe(undefined);
 	});
 });

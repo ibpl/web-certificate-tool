@@ -110,13 +110,13 @@ async function tsFetch<T>(url: string, options = {}): Promise<T> {
 // (initializeEnvironmentInternal with given path will be called only once).
 const initializeEnvironmentInternalPaths = new Map();
 
-// initializeEnvironmentInternal initializes application environemnt for given path.
-async function initializeEnvironmentInternal(path: string) {
+// initializeEnvironmentInternal initializes application environemnt for given URL.
+async function initializeEnvironmentInternal(url: URL) {
 	try {
 		// Load translations based on browser locale for t.get()
 		// work properly for error messages that may be generated
 		// during other initializations below.
-		await loadTranslations(window.navigator.language, path);
+		await loadTranslations(window.navigator.language, url.pathname);
 		/* v8 ignore next 4 */
 	} catch (e) {
 		// Throw error to generate +error.svelte error page.
@@ -162,6 +162,45 @@ async function initializeEnvironmentInternal(path: string) {
 			}
 		}
 
+		// Use theme mode defined with dark_theme query parameter if present.
+		const queryDarkTheme = url.searchParams.get('dark_theme');
+		if (queryDarkTheme !== null) {
+			switch (queryDarkTheme) {
+				case '0':
+					applicationSettings.darkTheme = false;
+					break;
+				case '1':
+					applicationSettings.darkTheme = true;
+					break;
+				default:
+					throw <App.Error>{
+						status: 400,
+						message: t.get('common.parameterOneOf', {
+							parameter: 'dark_theme',
+							set: '0, 1'
+						}),
+						url: url.toString()
+					};
+			}
+		}
+
+		// Use locale defined in locale query parameter if present.
+		const queryLocale = url.searchParams.get('locale');
+		if (queryLocale !== null) {
+			const supportedLocales = Object.keys(lang);
+			if (!supportedLocales.includes(queryLocale)) {
+				throw <App.Error>{
+					status: 400,
+					message: t.get('common.parameterOneOf', {
+						parameter: 'locale',
+						set: supportedLocales.join(', ')
+					}),
+					url: url.toString()
+				};
+			}
+			applicationSettings.locale = queryLocale;
+		}
+
 		// Save initialized settings in store.
 		settings.set(applicationSettings);
 		settingsInitialized.set(true);
@@ -171,11 +210,11 @@ async function initializeEnvironmentInternal(path: string) {
 	// otherwise use browser's locale.
 	await loadTranslations(
 		applicationSettings.locale ? applicationSettings.locale : window.navigator.language,
-		path
+		url.pathname
 	);
 }
 
-// initializeEnvironment initializes application environment for given path with
+// initializeEnvironment initializes application environment for given URL with
 // protection against executing initialization in parallel.
 //
 // Note: initializeEnvironment must be executed on top of load function
@@ -183,13 +222,13 @@ async function initializeEnvironmentInternal(path: string) {
 // load function /i.e. t.get() may not work without it/. Errors thrown
 // by this function are ignored in load() in root +layout.ts but should
 // not be ignored in other places.
-export async function initializeEnvironment(path: string) {
+export async function initializeEnvironment(url: URL) {
 	// Start initializeEnvironmentInternal only if was not started already by another
 	// async function for the same path.
-	if (initializeEnvironmentInternalPaths.get(path) === undefined) {
-		initializeEnvironmentInternalPaths.set(path, initializeEnvironmentInternal(path));
+	if (initializeEnvironmentInternalPaths.get(url.pathname) === undefined) {
+		initializeEnvironmentInternalPaths.set(url.pathname, initializeEnvironmentInternal(url));
 	}
-	return initializeEnvironmentInternalPaths.get(path);
+	return initializeEnvironmentInternalPaths.get(url.pathname);
 }
 
 // resetEnvironment resets application environment.

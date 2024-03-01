@@ -117,8 +117,8 @@ Content-Security-Policy: default-src 'self'
 
 Optional `config.json` file may be placed in application's root folder with the following parameters:
 
-- `darkTheme` [boolean]: forces initial theme mode to be light (when `false`) or dark (when `true`); when not defined user's system default theme mode will be used,
-- `locale` [string]: forces specified initial locale to be one of [supported locales](src/lib/i18n/lang.json); when not defined user's browser locale will be used with fallback to `en` if user's browser locale is not supported.
+- `darkTheme` [boolean]: forces initial theme mode to be light (when `false`) or dark (when `true`),
+- `locale` [string]: forces specified initial locale to be one of [supported locales](src/lib/i18n/lang.json).
 
 Example `config.json` content:
 
@@ -128,6 +128,23 @@ Example `config.json` content:
 	"locale": "pl"
 }
 ```
+
+The following, optional query parameters may be specified in URL:
+
+- `dark_theme`: forces initial theme mode to be light (when `0`) or dark (when `1`),
+- `locale`: forces specified initial locale to be one of [supported locales](src/lib/i18n/lang.json).
+
+Example URL:
+
+```
+https://wtc.example.com/?dark_theme=0&locale=pl
+```
+
+Setting source precendence (from highest to lowest):
+
+- URL query,
+- `config.json`,
+- user's system/browser current setting (`en` locale will be used as fallback if users's browser locale is not [supported](src/lib/i18n/lang.json)).
 
 ## Licenses
 

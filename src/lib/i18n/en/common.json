@@ -14,6 +14,7 @@
 	"operation": "Operation",
 	"pageLeaveConfirmation": "The changes that you made won't be saved! Are you sure that you want to leave the current page?",
 	"pageNotFound": "Requested page does not exist.",
+	"parameterOneOf": "Parameter {parameter} value must be one of: {set}.",
 	"themeModeDark": "Dark",
 	"themeModeLight": "Light",
 	"themeModeSystem": "System",

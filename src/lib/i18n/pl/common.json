@@ -14,6 +14,7 @@
 	"operation": "Operacja",
 	"pageLeaveConfirmation": "Wykonane przez ciebie zmiany nie zostaną zapisane! Czy na pewno chcesz opuścić bieżącą stronę?",
 	"pageNotFound": "Strona o podanym adresie nie istnieje.",
+	"parameterOneOf": "Parametr {parameter} musi mieć jedną z następujących wartości: {set}.",
 	"timeout": "Przekroczenie czasu komunikacji z serwerem.",
 	"themeModeDark": "Ciemny",
 	"themeModeLight": "Jasny",
