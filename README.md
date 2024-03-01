@@ -118,7 +118,7 @@ Content-Security-Policy: default-src 'self'
 Optional `config.json` file may be placed in application's root folder with the following parameters:
 
 - `darkTheme` [boolean]: forces initial theme mode to be light (when `false`) or dark (when `true`); when not defined user's system default theme mode will be used,
-- `locale` [string]: forces specified initial locale to be one of [supported locales](src/lib/i18n/lang.json); when not defined user's browser default locale will be used.
+- `locale` [string]: forces specified initial locale to be one of [supported locales](src/lib/i18n/lang.json); when not defined user's browser locale will be used with fallback to `en` if user's browser locale is not supported.
 
 Example `config.json` content:
 
