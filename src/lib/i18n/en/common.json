@@ -15,11 +15,13 @@
 	"pageLeaveConfirmation": "The changes that you made won't be saved! Are you sure that you want to leave the current page?",
 	"pageNotFound": "Requested page does not exist.",
 	"parameterOneOf": "Parameter {parameter} value must be one of: {set}.",
+	"requirementNotAvailable": "{requirement} not available.",
 	"themeModeDark": "Dark",
 	"themeModeLight": "Light",
 	"themeModeSystem": "System",
 	"timeout": "Timeout communicating with server.",
 	"unknownError": "Unknown error.",
+	"unsupportedBrowser": "Unsupported browser.",
 	"url": "URL",
 	"webCertificateTool": "Web Certificate Tool",
 	"yes": "Yes"

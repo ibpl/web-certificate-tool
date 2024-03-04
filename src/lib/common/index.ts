@@ -45,6 +45,22 @@ export function isValidConfig(arg: unknown): boolean {
 	return true;
 }
 
+// checkCryptoRequirements check for required crypto API stuff and throws an error if
+// browser does not meet requirements.
+export function checkCryptoRequirements() {
+	// SubtleCrypto interface of the Web Crypto API must be available.
+	if (typeof crypto === 'undefined' || !('subtle' in crypto)) {
+		throw <App.Error>{
+			status: 418,
+			message: t.get('common.unsupportedBrowser'),
+			details: t.get('common.requirementNotAvailable', {
+				requirement:
+					'<a href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto#browser_compatibility">SubtleCrypto</a>'
+			})
+		};
+	}
+}
+
 // tsFetch is generic fetch wrapper for fetching typed data.
 async function tsFetch<T>(url: string, options = {}): Promise<T> {
 	let response: Response;
@@ -228,6 +244,7 @@ export async function initializeEnvironment(url: URL) {
 	if (initializeEnvironmentInternalPaths.get(url.pathname) === undefined) {
 		initializeEnvironmentInternalPaths.set(url.pathname, initializeEnvironmentInternal(url));
 	}
+
 	return initializeEnvironmentInternalPaths.get(url.pathname);
 }
 

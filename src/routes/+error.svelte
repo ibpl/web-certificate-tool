@@ -25,7 +25,8 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 		</h6>
 		<p>
 			{#if $page?.error?.operation}{$t('common.operation')}: {$page.error.operation}<br />{/if}
-			{#if $page?.error?.details}{$t('common.details')}: {$page.error.details}<br />{/if}
+			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+			{#if $page?.error?.details}{$t('common.details')}: {@html $page.error.details}<br />{/if}
 			{#if $page?.error?.url}{$t('common.url')}: {$page.error.url}<br />{/if}
 		</p>
 	</Page>
