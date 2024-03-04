@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://www.ib.pl>
 
 import {
-	checkCryptoRequirements,
+	checkBrowserCompatibility,
 	initializeEnvironment,
 	resetEnvironment,
 	isValidConfig,
@@ -28,15 +28,15 @@ describe('isValidConfig', () => {
 	});
 });
 
-// Requirements check.
-describe('checkCryptoRequirements', () => {
+// Browser compatibility verification.
+describe('checkBrowserCompatibility', () => {
 	test('should throw error when subtle is not available in crypto', () => {
 		vi.stubGlobal('crypto', { dummy: 'test' });
-		expect(() => checkCryptoRequirements()).toThrowError('Unsupported browser.');
+		expect(() => checkBrowserCompatibility()).toThrowError('Unsupported browser.');
 	});
 	test('should throw error when crypto is undefined', () => {
 		vi.stubGlobal('crypto', undefined);
-		expect(() => checkCryptoRequirements()).toThrowError('Unsupported browser.');
+		expect(() => checkBrowserCompatibility()).toThrowError('Unsupported browser.');
 	});
 });
 

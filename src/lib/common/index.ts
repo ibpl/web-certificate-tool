@@ -45,9 +45,8 @@ export function isValidConfig(arg: unknown): boolean {
 	return true;
 }
 
-// checkCryptoRequirements check for required crypto API stuff and throws an error if
-// browser does not meet requirements.
-export function checkCryptoRequirements() {
+// checkBrowserCompatibility checks whether browser meets requirements and throws an error if not.
+export function checkBrowserCompatibility() {
 	// SubtleCrypto interface of the Web Crypto API must be available.
 	if (typeof crypto === 'undefined' || !('subtle' in crypto)) {
 		throw <App.Error>{

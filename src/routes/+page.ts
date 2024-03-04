@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://www.ib.pl>
 
 import type { PageLoad } from './$types';
-import { initializeEnvironment, checkCryptoRequirements } from '$lib/common';
+import { initializeEnvironment, checkBrowserCompatibility } from '$lib/common';
 
 export const load = (async ({ url }) => {
 	// Note: initializeEnvironment must be executed on top of load function
@@ -12,8 +12,8 @@ export const load = (async ({ url }) => {
 	// not be ignored in other places.
 	await initializeEnvironment(url);
 
-	// Check for required crypto API stuff and throw an error if browser does not meet requirements.
-	checkCryptoRequirements();
+	// Check for browser compatibility and throw an error if browser does not meet requirements.
+	checkBrowserCompatibility();
 
 	return {};
 }) satisfies PageLoad;
