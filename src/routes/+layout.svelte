@@ -61,21 +61,18 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	{/if}
 </svelte:head>
 
-<!-- #key stuff below required for UI to be re-rendered correctly on locale change. -->
-{#key $locale}
-	<!-- Don't display content until smallWindow is set to true or false in handleWindowResize()
+<!-- Don't display content until smallWindow is set to true or false in handleWindowResize()
 	executed in onMount() to serve correct page layout from the beginning. -->
-	{#if $smallWindow !== undefined}
-		{#if $progressOpen}
-			<ProgressBar />
-		{/if}
+{#if $smallWindow !== undefined}
+	{#if $progressOpen}
+		<ProgressBar />
 	{/if}
+{/if}
 
-	<slot />
+<slot />
 
-	<!-- Modal dialog for page leaving confirmation when unsaved changes exists. -->
-	<PageLeaveDialog />
+<!-- Modal dialog for page leaving confirmation when unsaved changes exists. -->
+<PageLeaveDialog />
 
-	<!-- Information snackbar. -->
-	<InformationSnackbar />
-{/key}
+<!-- Information snackbar. -->
+<InformationSnackbar />
