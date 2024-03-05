@@ -13,11 +13,11 @@ export const FETCH_TIMEOUT = 10000; // FETCH_TIMEOUT is UI data fetching timeout
 
 // Settings defines application settings.
 export type Settings = {
-	// darkTheme allows to set application theme mode:
-	// 	when true - dark theme is used,
-	// 	when false - light theme is used,
-	// 	when undefined - system preference is used.
-	darkTheme: boolean | undefined;
+	// themeMode allows to set application theme mode; supported values:
+	// 	"dark" - dark theme is used,
+	// 	"light" - light theme is used,
+	// 	empty string - system preference is used.
+	themeMode: string;
 
 	// locale is application locale. When empty, browser locale is used.
 	locale: string;
@@ -31,8 +31,11 @@ export function isValidConfig(arg: unknown): boolean {
 		return false;
 	}
 
-	// darkTheme field (if present) must be boolean.
-	if ('darkTheme' in arg && typeof arg.darkTheme !== 'boolean') {
+	// themeMode (if present) must be a string, one of: "dark", "light".
+	if (
+		'themeMode' in arg &&
+		(typeof arg.themeMode !== 'string' || (arg.themeMode !== 'dark' && arg.themeMode !== 'light'))
+	) {
 		return false;
 	}
 
@@ -156,12 +159,12 @@ async function initializeEnvironmentInternal(url: URL) {
 				};
 			}
 
-			// Use theme mode from config file only if defined there.
-			if (response.darkTheme !== undefined) {
-				applicationSettings.darkTheme = response.darkTheme;
+			// Use theme mode from config file only if defined and non-empty there.
+			if (response.themeMode) {
+				applicationSettings.themeMode = response.themeMode;
 			}
 
-			// Use locale from config file only if defined there.
+			// Use locale from config file only if defined and non-empty there.
 			if (response.locale) {
 				applicationSettings.locale = response.locale;
 			}
@@ -177,37 +180,32 @@ async function initializeEnvironmentInternal(url: URL) {
 			}
 		}
 
-		// Use theme mode defined with dark_theme query parameter if present.
-		const queryDarkTheme = url.searchParams.get('dark_theme');
-		if (queryDarkTheme !== null) {
-			switch (queryDarkTheme) {
-				case '0':
-					applicationSettings.darkTheme = false;
-					break;
-				case '1':
-					applicationSettings.darkTheme = true;
-					break;
-				default:
-					throw <App.Error>{
-						status: 400,
-						message: t.get('common.parameterOneOf', {
-							parameter: 'dark_theme',
-							set: '0, 1'
-						}),
-						url: url.toString()
-					};
+		// Use theme mode defined with tm query parameter if present.
+		const queryThemeMode = url.searchParams.get('tm');
+		if (queryThemeMode !== null) {
+			if (queryThemeMode == 'dark' || queryThemeMode == 'light') {
+				applicationSettings.themeMode = queryThemeMode;
+			} else {
+				throw <App.Error>{
+					status: 400,
+					message: t.get('common.parameterOneOf', {
+						parameter: 'tm',
+						set: 'light, dark'
+					}),
+					url: url.toString()
+				};
 			}
 		}
 
-		// Use locale defined in locale query parameter if present.
-		const queryLocale = url.searchParams.get('locale');
+		// Use locale defined in l query parameter if present.
+		const queryLocale = url.searchParams.get('l');
 		if (queryLocale !== null) {
 			const supportedLocales = Object.keys(lang);
 			if (!supportedLocales.includes(queryLocale)) {
 				throw <App.Error>{
 					status: 400,
 					message: t.get('common.parameterOneOf', {
-						parameter: 'locale',
+						parameter: 'l',
 						set: supportedLocales.join(', ')
 					}),
 					url: url.toString()

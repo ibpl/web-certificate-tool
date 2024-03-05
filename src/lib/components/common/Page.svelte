@@ -27,29 +27,29 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 
 	// themeModes contains all avalable theme mode selections.
 	const themeModes = [
-		{ id: 1, name: 'common.themeModeLight', icon: mdiWhiteBalanceSunny, darkTheme: false },
+		{ id: 1, name: 'common.themeModeLight', icon: mdiWhiteBalanceSunny, themeMode: 'light' },
 		{
 			id: 2,
 			name: 'common.themeModeSystem',
 			icon: mdiThemeLightDark,
-			darkTheme: undefined
+			themeMode: ''
 		},
-		{ id: 3, name: 'common.themeModeDark', icon: mdiWeatherNight, darkTheme: true }
+		{ id: 3, name: 'common.themeModeDark', icon: mdiWeatherNight, themeMode: 'dark' }
 	];
 
 	// selectedThemeMode is selected theme mode (system by default).
 	let selectedThemeMode = themeModes[1];
-	if ($settings.darkTheme === false) {
+	if ($settings.themeMode === 'light') {
 		selectedThemeMode = themeModes[0];
 	}
-	if ($settings.darkTheme === true) {
+	if ($settings.themeMode === 'dark') {
 		selectedThemeMode = themeModes[2];
 	}
 
 	// Update settings store on settings change in UI.
 	$: {
-		if ($settings.darkTheme != selectedThemeMode.darkTheme || $settings.locale != $locale) {
-			$settings.darkTheme = selectedThemeMode.darkTheme;
+		if ($settings.themeMode != selectedThemeMode.themeMode || $settings.locale != $locale) {
+			$settings.themeMode = selectedThemeMode.themeMode;
 			$settings.locale = $locale;
 		}
 	}
@@ -102,11 +102,11 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 									// Change locale.
 									$locale = l;
 
-									// Set locale as URL query parameter after user changes it manually.
+									// Set locale as l URL query parameter after user changes it manually.
 									// Don't execute in during unit tests as goto is not available there.
 									if (browser) {
 										const urlSearchParams = new URLSearchParams(window.location.search);
-										urlSearchParams.set('locale', l);
+										urlSearchParams.set('l', l);
 										await goto('/?' + urlSearchParams.toString(), {
 											replaceState: true,
 											invalidateAll: false
@@ -156,13 +156,13 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 										const urlSearchParams = new URLSearchParams(window.location.search);
 										switch (themeMode.id) {
 											case 1:
-												urlSearchParams.set('dark_theme', '0');
+												urlSearchParams.set('tm', 'light');
 												break;
 											case 3:
-												urlSearchParams.set('dark_theme', '1');
+												urlSearchParams.set('tm', 'dark');
 												break;
 											default:
-												urlSearchParams.delete('dark_theme');
+												urlSearchParams.delete('tm');
 												break;
 										}
 										await goto('/?' + urlSearchParams.toString(), {

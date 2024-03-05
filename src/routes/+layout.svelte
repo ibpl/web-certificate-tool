@@ -50,10 +50,10 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	   <link rel="preload" href="/smui-dark.css" as="style" />
 	...to avoid FOUC on page load. -->
 <svelte:head>
-	{#if $settings.darkTheme === undefined}
+	{#if $settings.themeMode == ''}
 		<link rel="stylesheet" href="/smui.css" media="(prefers-color-scheme: light)" />
 		<link rel="stylesheet" href="/smui-dark.css" media="screen and (prefers-color-scheme: dark)" />
-	{:else if $settings.darkTheme}
+	{:else if $settings.themeMode == 'dark'}
 		<link rel="stylesheet" href="/smui.css" />
 		<link rel="stylesheet" href="/smui-dark.css" media="screen" />
 	{:else}

@@ -17,14 +17,14 @@ import lang from '$lib/i18n/lang.json';
 describe('isValidConfig', () => {
 	test('should recognize valid configurations', () => {
 		expect(isValidConfig({ test: '' })).toBeTruthy();
-		expect(isValidConfig({ darkTheme: true, locale: 'en', anything: 1 })).toBeTruthy();
-		expect(isValidConfig({ darkTheme: false, locale: 'pl' })).toBeTruthy();
+		expect(isValidConfig({ themeMode: 'dark', locale: 'en', anything: 1 })).toBeTruthy();
+		expect(isValidConfig({ themeMode: 'light', locale: 'pl' })).toBeTruthy();
 	});
 
 	test('should recognize invalid configurations', () => {
 		expect(isValidConfig(1)).toBeFalsy();
-		expect(isValidConfig({ darkTheme: 1, locale: 'en' })).toBeFalsy();
-		expect(isValidConfig({ darkTheme: false, locale: 0 })).toBeFalsy();
+		expect(isValidConfig({ themeMode: 1, locale: 'en' })).toBeFalsy();
+		expect(isValidConfig({ themeMode: 'light', locale: 0 })).toBeFalsy();
 	});
 });
 
@@ -86,7 +86,7 @@ describe('initializeEnvironment', () => {
 				return new HttpResponse(
 					JSON.stringify({
 						locale: 'pl',
-						darkTheme: false
+						themeMode: 'light'
 					}),
 					{
 						status: 403,
@@ -108,7 +108,7 @@ describe('initializeEnvironment', () => {
 					return new HttpResponse(
 						JSON.stringify({
 							locale: 'pl',
-							darkTheme: false
+							themeMode: 'light'
 						}),
 						{
 							headers: {
@@ -182,7 +182,7 @@ describe('initializeEnvironment', () => {
 			http.get('/config.json', () => {
 				return HttpResponse.json({
 					locale: 'pl',
-					darkTheme: false,
+					themeMode: 'light',
 					dummy: 123
 				});
 			})
@@ -194,7 +194,7 @@ describe('initializeEnvironment', () => {
 		server.use(
 			http.get('/config.json', () => {
 				return HttpResponse.json({
-					darkTheme: true,
+					themeMode: 'dark',
 					locale: 'en'
 				});
 			})
@@ -206,7 +206,7 @@ describe('initializeEnvironment', () => {
 		server.use(
 			http.get('/config.json', () => {
 				return HttpResponse.json({
-					darkTheme: true,
+					themeMode: 'dark',
 					locale: 'EN'
 				});
 			})
@@ -220,7 +220,7 @@ describe('initializeEnvironment', () => {
 		server.use(
 			http.get('/config.json', () => {
 				return HttpResponse.json({
-					darkTheme: true,
+					themeMode: 'dark',
 					locale: { test: 1 }
 				});
 			})
@@ -230,11 +230,11 @@ describe('initializeEnvironment', () => {
 		);
 	});
 
-	test('should throw error on invalid darkMode value in config.json', async () => {
+	test('should throw error on invalid themeMode value in config.json', async () => {
 		server.use(
 			http.get('/config.json', () => {
 				return HttpResponse.json({
-					darkTheme: 'something',
+					themeMode: 'something',
 					locale: 'en'
 				});
 			})
@@ -251,23 +251,23 @@ describe('initializeEnvironment', () => {
 			})
 		);
 		const url = new URL(window.location.href);
-		url.searchParams.set('dark_theme', '1');
-		url.searchParams.set('locale', 'fr');
+		url.searchParams.set('tm', 'dark');
+		url.searchParams.set('l', 'fr');
 		await expect(initializeEnvironment(url)).rejects.toThrowError(
-			'Parameter locale value must be one of: ' + Object.keys(lang).join(', ') + '.'
+			'Parameter l value must be one of: ' + Object.keys(lang).join(', ') + '.'
 		);
 	});
 
-	test('should throw error on unsupported dark_theme in query parameters', async () => {
+	test('should throw error on unsupported tm in query parameters', async () => {
 		server.use(
 			http.get('/config.json', () => {
 				return new HttpResponse(null, { status: 404 });
 			})
 		);
 		const url = new URL(window.location.href);
-		url.searchParams.set('dark_theme', '2');
+		url.searchParams.set('tm', '2');
 		await expect(initializeEnvironment(url)).rejects.toThrowError(
-			'Parameter dark_theme value must be one of: 0, 1.'
+			'Parameter tm value must be one of: light, dark.'
 		);
 	});
 
@@ -275,14 +275,14 @@ describe('initializeEnvironment', () => {
 		server.use(
 			http.get('/config.json', () => {
 				return HttpResponse.json({
-					darkTheme: true,
+					themeMode: 'dark',
 					locale: 'en'
 				});
 			})
 		);
 		const url = new URL(window.location.href);
-		url.searchParams.set('dark_theme', '0');
-		url.searchParams.set('locale', 'pl');
+		url.searchParams.set('tm', 'light');
+		url.searchParams.set('l', 'pl');
 		await expect(initializeEnvironment(url)).resolves.toBe(undefined);
 	});
 });

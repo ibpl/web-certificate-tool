@@ -117,27 +117,27 @@ Content-Security-Policy: default-src 'self'
 
 Optional `config.json` file may be placed in application's root folder with the following parameters:
 
-- `darkTheme` [boolean]: forces initial theme mode to be light (when `false`) or dark (when `true`),
+- `themeMode` [string]: forces initial theme mode to be light (when `light`) or dark (when `dark`),
 - `locale` [string]: forces specified initial locale to be one of [supported locales](src/lib/i18n/lang.json).
 
 Example `config.json` content:
 
 ```
 {
-	"darkTheme": false,
+	"themeMode": "dark",
 	"locale": "pl"
 }
 ```
 
 The following, optional query parameters may be specified in URL:
 
-- `dark_theme`: forces initial theme mode to be light (when `0`) or dark (when `1`),
-- `locale`: forces specified initial locale to be one of [supported locales](src/lib/i18n/lang.json).
+- `tm`: forces initial theme mode to be light (when `light`) or dark (when `dark`),
+- `l`: forces specified initial locale to be one of [supported locales](src/lib/i18n/lang.json).
 
 Example URL:
 
 ```
-https://wtc.example.com/?dark_theme=0&locale=pl
+https://wtc.example.com/?tm=light&l=pl
 ```
 
 Setting source precendence (from highest to lowest):

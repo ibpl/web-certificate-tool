@@ -18,7 +18,7 @@ export const settingsInitialized = writable<boolean>(false);
 
 // settings is application settings.
 export const settings = writable<Settings>({
-	darkTheme: undefined, // System theme mode by default.
+	themeMode: '', // System theme mode by default.
 	locale: '' // Browser locale by default.
 });
 
