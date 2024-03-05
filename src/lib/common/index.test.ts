@@ -30,6 +30,11 @@ describe('isValidConfig', () => {
 
 // Browser compatibility verification.
 describe('checkBrowserCompatibility', () => {
+	test('should not throw an error if crypto.subtle is available', () => {
+		vi.stubGlobal('crypto', { subtle: 'dummy' });
+		expect(checkBrowserCompatibility()).toBe(undefined);
+	});
+
 	test('should throw error when subtle is not available in crypto', () => {
 		vi.stubGlobal('crypto', { dummy: 'test' });
 		expect(() => checkBrowserCompatibility()).toThrowError('Unsupported browser.');

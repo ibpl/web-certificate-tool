@@ -7,6 +7,7 @@ import { get } from 'svelte/store';
 import { t } from '$lib/i18n';
 import { convertToAppError } from '$lib/errors';
 import lang from '$lib/i18n/lang.json';
+import { getCrypto } from 'pkijs';
 
 export const CONFIG_CONTENT_TYPE = 'application/json'; // CONFIG_CONTENT_TYPE is content type of application configuration file.
 export const FETCH_TIMEOUT = 10000; // FETCH_TIMEOUT is UI data fetching timeout [ms].
@@ -60,6 +61,12 @@ export function checkBrowserCompatibility() {
 					'<a href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto#browser_compatibility">SubtleCrypto</a>'
 			})
 		};
+	}
+	try {
+		getCrypto();
+		/* v8 ignore next 3 */
+	} catch (e) {
+		throw convertToAppError(e, 'pkijs.getCrypto', t.get('common.unsupportedBrowser'));
 	}
 }
 
