@@ -7,10 +7,21 @@ import { get } from 'svelte/store';
 import { t } from '$lib/i18n';
 import { convertToAppError } from '$lib/errors';
 import lang from '$lib/i18n/lang.json';
-import { getCrypto } from 'pkijs';
+import {
+	PublicKeyInfo,
+	PrivateKeyInfo,
+	getCrypto,
+	PKCS8ShroudedKeyBag,
+	type ContentEncryptionAesCbcParams
+} from 'pkijs';
+import { fromBER } from 'asn1js';
+import { Convert } from 'pvtsutils';
+import FileSaver from 'file-saver';
 
 export const CONFIG_CONTENT_TYPE = 'application/json'; // CONFIG_CONTENT_TYPE is content type of application configuration file.
 export const FETCH_TIMEOUT = 10000; // FETCH_TIMEOUT is UI data fetching timeout [ms].
+export const OWNER_ID_MAX_LENGTH = 300; // OWNER_ID_MAX_LENGTH owner's ID lenght limit.
+export const PBKDF2_ITERATION_COUNT = 600000; // PBKDF2_ITERATION_COUNT is number of PBKDF2 iterations for key encryption.
 
 // Settings defines application settings.
 export type Settings = {
@@ -22,6 +33,9 @@ export type Settings = {
 
 	// locale is application locale. When empty, browser locale is used.
 	locale: string;
+
+	// ownerId is key owner's ID.
+	ownerId: string;
 };
 
 // isValidConfig check wheter given parameter is valid application configuration.
@@ -42,6 +56,15 @@ export function isValidConfig(arg: unknown): boolean {
 
 	// locale field (if present) must be supported locale string.
 	if ('locale' in arg && (typeof arg.locale !== 'string' || !(arg.locale in lang))) {
+		return false;
+	}
+
+	// ownerId field (if present) must be non-empty string not longer than OWNER_ID_MAX_LENGTH.
+	if (
+		'ownerId' in arg &&
+		(typeof arg.ownerId !== 'string' ||
+			!(arg.ownerId.length > 0 && arg.ownerId.length <= OWNER_ID_MAX_LENGTH))
+	) {
 		return false;
 	}
 
@@ -166,14 +189,19 @@ async function initializeEnvironmentInternal(url: URL) {
 				};
 			}
 
-			// Use theme mode from config file only if defined and non-empty there.
+			// Use theme mode from config file only if defined there.
 			if (response.themeMode) {
 				applicationSettings.themeMode = response.themeMode;
 			}
 
-			// Use locale from config file only if defined and non-empty there.
+			// Use locale from config file only if defined there.
 			if (response.locale) {
 				applicationSettings.locale = response.locale;
+			}
+
+			// Use owner's ID config file only if defined there.
+			if (response.ownerId) {
+				applicationSettings.ownerId = response.ownerId;
 			}
 		} catch (e) {
 			// Ignore if config.json does not exist (HTTP 404). Display other errors.
@@ -221,6 +249,23 @@ async function initializeEnvironmentInternal(url: URL) {
 			applicationSettings.locale = queryLocale;
 		}
 
+		// Use owner ID defined in oid query parameter if present.
+		const queryOwnerId = url.searchParams.get('oid');
+		if (queryOwnerId !== null) {
+			if (!(queryOwnerId.length > 0 && queryOwnerId.length <= OWNER_ID_MAX_LENGTH)) {
+				throw <App.Error>{
+					status: 400,
+					message: t.get('common.parameterLengthMustBeInRange', {
+						parameter: 'oid',
+						from: 0,
+						to: OWNER_ID_MAX_LENGTH
+					}),
+					url: url.toString()
+				};
+			}
+			applicationSettings.ownerId = queryOwnerId;
+		}
+
 		// Save initialized settings in store.
 		settings.set(applicationSettings);
 		settingsInitialized.set(true);
@@ -256,4 +301,93 @@ export async function initializeEnvironment(url: URL) {
 export async function resetEnvironment() {
 	initializeEnvironmentInternalPaths.clear();
 	settingsInitialized.set(false);
+}
+
+// bufferToHex convert buffer to lowercase hex string separated with ":".
+export function bufferToHex(buffer: ArrayBuffer) {
+	return [...new Uint8Array(buffer)].map((b) => b.toString(16).padStart(2, '0')).join(':');
+}
+
+// formatPEM formats string to have each line length equal to 64 octets.
+function formatPEM(pemString: string): string {
+	// Return unmodified string if not longer than 64 chars.
+	if (pemString.length <= 64) {
+		return pemString;
+	}
+	let pemStringFormatted = '',
+		wrapIndex = 0;
+	for (let i = 64; i < pemString.length; i += 64) {
+		pemStringFormatted += pemString.substring(wrapIndex, i) + '\n';
+		wrapIndex = i;
+	}
+	pemStringFormatted += pemString.substring(wrapIndex, pemString.length);
+	return pemStringFormatted;
+}
+
+// toPEM creates PEM content from buffer and label.
+export function toPEM(buffer: BufferSource, label: string): string {
+	return [
+		`-----BEGIN ${label}-----`,
+		formatPEM(Convert.ToBase64(buffer)),
+		`-----END ${label}-----`,
+		''
+	].join('\n');
+}
+
+// fromPEM creates buffer from PEM content.
+export function fromPEM(pem: string): ArrayBuffer {
+	const base64 = pem.replace(/-{5}(BEGIN|END) .*-{5}/gm, '').replace(/\s/gm, '');
+	return Convert.FromBase64(base64);
+}
+
+// publicKeyIdentifier returns public key identifier (Subject Key Identifier) from given key pair.
+export async function publicKeyIdentifier(
+	publicKey: CryptoKey,
+	algorithm: AlgorithmIdentifier
+): Promise<string> {
+	const crypto = getCrypto(true);
+	const publicKeyBinary = await crypto.subtle.exportKey('spki', publicKey);
+	const publicKeyInfo = new PublicKeyInfo({ schema: fromBER(publicKeyBinary).result });
+	return bufferToHex(
+		await crypto.digest(algorithm, publicKeyInfo.subjectPublicKey.valueBlock.valueHexView)
+	);
+}
+
+// downloadFile makes browser to download file with given name, content type and content.
+export function downloadFile(filename: string, contentType: string, content: ArrayBuffer) {
+	const file = new File([content], filename, { type: contentType });
+	FileSaver.saveAs(file);
+}
+
+// downloadPKCS8 downloads given private key in PEM formatted PKCS #8 file with optional encryption
+// (when password is non-empty).
+export async function downloadPKCS8(kp: CryptoKeyPair, password: string, filename: string) {
+	let privateKeyBinary = await crypto.subtle.exportKey('pkcs8', kp.privateKey);
+	let pemLabel = 'PRIVATE KEY';
+	if (password) {
+		const pkcs8Simpl = new PrivateKeyInfo({ schema: fromBER(privateKeyBinary).result });
+		const pkcs8 = new PKCS8ShroudedKeyBag({ parsedValue: pkcs8Simpl });
+
+		await pkcs8.makeInternalValues({
+			password: Convert.FromUtf8String(password),
+			iterationCount: PBKDF2_ITERATION_COUNT,
+			hmacHashAlgorithm: 'SHA-256',
+			contentEncryptionAlgorithm: <ContentEncryptionAesCbcParams>{
+				name: 'AES-CBC',
+				length: 256
+			}
+		});
+		privateKeyBinary = pkcs8.toSchema().toBER(false);
+		pemLabel = 'ENCRYPTED PRIVATE KEY';
+	}
+	downloadFile(
+		filename,
+		'application/x-pem-file',
+		new TextEncoder().encode(toPEM(privateKeyBinary, pemLabel))
+	);
+}
+
+// Callback is callback function definition.
+export interface Callback {
+	(): void;
 }

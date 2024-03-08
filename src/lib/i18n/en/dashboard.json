@@ -1,1 +1,14 @@
-{}
+{
+	"downloadKey": "Download key",
+	"generateAndDownloadNewKey": "Generate and download new key",
+	"key": "Key",
+	"keyGeneratedSuccessfully": "Key generated successfully.",
+	"keyIdentifier": "{type} identifier",
+	"keyOwnersId": "Key owner's ID.",
+	"ownerId": "Owner ID",
+	"ownerIdFieldCannotBeEmpty": "Owner ID field cannot be empty.",
+	"passwordForKeyEncryptionInFiles": "Password for the private key encryption in files. For better security use '<'a href=\"https://en.wikipedia.org/wiki/Password_strength\"'>'strong passwords'<'/a'>'.",
+	"plainKeyConfirmation": "Do you really want to download an unencrypted private key?",
+	"plainKeyConfirmationContent": "Encrypting the private key in a file further protects it from unauthorized access. In order to encrypt the private key in a file, you need to enter a password in the Password field, and currently this field is empty, which if you accept this download, will cause the private key to be unencrypted in the downloaded file. Do you really want to download a file with an unencrypted private key?",
+	"type": "Type"
+}

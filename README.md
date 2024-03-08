@@ -115,15 +115,17 @@ Content-Security-Policy: default-src 'self'
 
 ## Configuration
 
-Optional `config.json` file may be placed in application's root folder with the following parameters:
+Optional `config.json` file may be placed in application's root folder with the following optional parameters:
 
-- `themeMode` [string]: forces initial theme mode to be light (when `light`) or dark (when `dark`),
-- `locale` [string]: forces specified initial locale to be one of [supported locales](src/lib/i18n/lang.json).
+- `locale` [string]: forces specified initial locale to be one of [supported locales](src/lib/i18n/lang.json),
+- `ownerId` [string]: forces specified initial owner's ID (value length must be in range 1-300),
+- `themeMode` [string]: forces initial theme mode to be light (when `light`) or dark (when `dark`).
 
 Example `config.json` content:
 
 ```
 {
+	"ownerId": "test@example.com",
 	"themeMode": "dark",
 	"locale": "pl"
 }
@@ -131,13 +133,14 @@ Example `config.json` content:
 
 The following, optional query parameters may be specified in URL:
 
-- `tm`: forces initial theme mode to be light (when `light`) or dark (when `dark`),
-- `l`: forces specified initial locale to be one of [supported locales](src/lib/i18n/lang.json).
+- `l` [string]: forces specified initial locale to be one of [supported locales](src/lib/i18n/lang.json),
+- `oid` [string]: forces specified initial owner's ID (value length must be in range 1-300),
+- `tm` [string]: forces initial theme mode to be light (when `light`) or dark (when `dark`).
 
 Example URL:
 
 ```
-https://wtc.example.com/?tm=light&l=pl
+https://wtc.example.com/?l=pl&tm=light&oid=test@example.com
 ```
 
 Setting source precendence (from highest to lowest):

@@ -12,19 +12,26 @@ import {
 import { server } from '../../../tests/vitest-setup';
 import { HttpResponse, http } from 'msw';
 import lang from '$lib/i18n/lang.json';
+import { OWNER_ID_MAX_LENGTH } from '$lib/common';
 
 // Configuration validation.
 describe('isValidConfig', () => {
 	test('should recognize valid configurations', () => {
 		expect(isValidConfig({ test: '' })).toBeTruthy();
 		expect(isValidConfig({ themeMode: 'dark', locale: 'en', anything: 1 })).toBeTruthy();
-		expect(isValidConfig({ themeMode: 'light', locale: 'pl' })).toBeTruthy();
+		expect(isValidConfig({ themeMode: 'light', ownerId: '1', locale: 'pl' })).toBeTruthy();
+		expect(
+			isValidConfig({ themeMode: 'light', ownerId: 'a'.repeat(OWNER_ID_MAX_LENGTH), locale: 'pl' })
+		).toBeTruthy();
 	});
 
 	test('should recognize invalid configurations', () => {
 		expect(isValidConfig(1)).toBeFalsy();
 		expect(isValidConfig({ themeMode: 1, locale: 'en' })).toBeFalsy();
 		expect(isValidConfig({ themeMode: 'light', locale: 0 })).toBeFalsy();
+		expect(isValidConfig({ ownerId: '' })).toBeFalsy();
+		expect(isValidConfig({ ownerId: { test: 'test' } })).toBeFalsy();
+		expect(isValidConfig({ ownerId: 'a'.repeat(OWNER_ID_MAX_LENGTH + 1) })).toBeFalsy();
 	});
 });
 
@@ -195,12 +202,13 @@ describe('initializeEnvironment', () => {
 		await expect(initializeEnvironment(new URL(window.location.href))).resolves.toBe(undefined);
 	});
 
-	test('should accept valid config.json with en locale and dark theme mode', async () => {
+	test('should accept valid config.json with en locale and dark theme mode and valid ownerId', async () => {
 		server.use(
 			http.get('/config.json', () => {
 				return HttpResponse.json({
 					themeMode: 'dark',
-					locale: 'en'
+					locale: 'en',
+					ownerId: 'test@example.com'
 				});
 			})
 		);
@@ -249,6 +257,21 @@ describe('initializeEnvironment', () => {
 		);
 	});
 
+	test('should throw error on invalid onwerId value in config.json', async () => {
+		server.use(
+			http.get('/config.json', () => {
+				return HttpResponse.json({
+					themeMode: 'dark',
+					ownerId: 1,
+					locale: 'en'
+				});
+			})
+		);
+		await expect(initializeEnvironment(new URL(window.location.href))).rejects.toThrowError(
+			'Invalid configuration file content.'
+		);
+	});
+
 	test('should throw error on unsupported locale in query parameters', async () => {
 		server.use(
 			http.get('/config.json', () => {
@@ -256,8 +279,7 @@ describe('initializeEnvironment', () => {
 			})
 		);
 		const url = new URL(window.location.href);
-		url.searchParams.set('tm', 'dark');
-		url.searchParams.set('l', 'fr');
+		url.searchParams.set('l', 'EN');
 		await expect(initializeEnvironment(url)).rejects.toThrowError(
 			'Parameter l value must be one of: ' + Object.keys(lang).join(', ') + '.'
 		);
@@ -276,16 +298,44 @@ describe('initializeEnvironment', () => {
 		);
 	});
 
+	test('should throw error on empty oid in query parameters', async () => {
+		server.use(
+			http.get('/config.json', () => {
+				return new HttpResponse(null, { status: 404 });
+			})
+		);
+		const url = new URL(window.location.href);
+		url.searchParams.set('oid', '');
+		await expect(initializeEnvironment(url)).rejects.toThrowError(
+			'Parameter oid length must be in range 0-300.'
+		);
+	});
+
+	test('should throw error on too long oid in query parameters', async () => {
+		server.use(
+			http.get('/config.json', () => {
+				return new HttpResponse(null, { status: 404 });
+			})
+		);
+		const url = new URL(window.location.href);
+		url.searchParams.set('oid', 'a'.repeat(OWNER_ID_MAX_LENGTH + 1));
+		await expect(initializeEnvironment(url)).rejects.toThrowError(
+			'Parameter oid length must be in range 0-300.'
+		);
+	});
+
 	test('should accept valid config.json and valid query parameters', async () => {
 		server.use(
 			http.get('/config.json', () => {
 				return HttpResponse.json({
 					themeMode: 'dark',
-					locale: 'en'
+					locale: 'en',
+					ownerId: 'john1@example.com.example.com.example.com'
 				});
 			})
 		);
 		const url = new URL(window.location.href);
+		url.searchParams.set('oid', 'b'.repeat(OWNER_ID_MAX_LENGTH));
 		url.searchParams.set('tm', 'light');
 		url.searchParams.set('l', 'pl');
 		await expect(initializeEnvironment(url)).resolves.toBe(undefined);

@@ -12,8 +12,8 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	export let open: boolean; // open allows to open (when true) or close (when false) confirmation dialog.
 	export let title: string; // title is string displayed in bar (cannot contain leading whitespace due to mdc-typography-baseline-top()).
 	export let content: string; // content is content displayed in confirmation dialog.
-	export let confirmLabel: string = $t('common.yes'); // confirmLabel is text displayed on confirm button.
-	export let refuseLabel: string = $t('common.no'); // refuseLabel is text displayed on refuse button.
+	export let confirmLabel = ''; // confirmLabel is text displayed on confirm button.
+	export let refuseLabel = ''; // refuseLabel is text displayed on refuse button.
 
 	const dispatch = createEventDispatcher();
 
@@ -37,13 +37,14 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	aria-describedby="confirmation-dialog-content"
 >
 	<Title id="confirmation-dialog-title">{title}</Title>
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 	<Content id="confirmation-dialog-content">{content}</Content>
 	<Actions>
 		<Button action="confirm">
-			<Label>{confirmLabel}</Label>
+			<Label>{confirmLabel ? confirmLabel : $t('common.yes')}</Label>
 		</Button>
 		<Button action="refuse" defaultAction use={[InitialFocus]}>
-			<Label>{refuseLabel}</Label>
+			<Label>{refuseLabel ? refuseLabel : $t('common.no')}</Label>
 		</Button>
 	</Actions>
 </Dialog>

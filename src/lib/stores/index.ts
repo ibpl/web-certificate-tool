@@ -19,7 +19,8 @@ export const settingsInitialized = writable<boolean>(false);
 // settings is application settings.
 export const settings = writable<Settings>({
 	themeMode: '', // System theme mode by default.
-	locale: '' // Browser locale by default.
+	locale: '', // Browser locale by default.
+	ownerId: '' // Empty owner's ID by default.
 });
 
 // unsavedDataExists is true when unsave data is present on page (used

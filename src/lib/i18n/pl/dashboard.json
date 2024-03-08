@@ -1,1 +1,14 @@
-{}
+{
+	"downloadKey": "Pobierz klucz",
+	"generateAndDownloadNewKey": "Wygeneruj i pobierz nowy klucz",
+	"key": "Klucz",
+	"keyGeneratedSuccessfully": "Klucz wygenerowany pomyślnie.",
+	"keyIdentifier": "Identyfikator {type}",
+	"keyOwnersId": "ID właściciela klucza.",
+	"ownerId": "ID właściciela",
+	"ownerIdFieldCannotBeEmpty": "Pole ID właściciela nie może być puste.",
+	"passwordForKeyEncryptionInFiles": "Hasło do szyfrowania klucza prywatnego w plikach. Dla lepszego bezpieczeństwa używaj '<'a href=\"https://pl.wikipedia.org/wiki/Mocne_has%C5%82o\"'>'silnych haseł'<'/a'>'.",
+	"plainKeyConfirmation": "Czy na pewno chcesz pobrać niezaszyfrowany klucz prywatny?",
+	"plainKeyConfirmationContent": "Zaszyfrowanie klucza prywatnego w pliku zabezpiecza go dodatkowo przed nieupoważnionym dostępem. W celu zaszyfrowania klucza prywatnego w pliku, należy podać hasło w polu Hasło a obecnie pole to jest puste co w przypadku akceptacji tego pobierania spowoduje, że klucz prywatny będzie niezaszyfrowany w pobranym pliku. Czy na pewno chcesz pobrać plik z niezaszyfrowanym kluczem prywatnym?",
+	"type": "Typ"
+}
