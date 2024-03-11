@@ -20,6 +20,7 @@
 	"devDependencies": {
 		"@material/typography": "^14.0.0",
 		"@mdi/js": "^7.4.47",
+		"@peculiar/webcrypto": "^1.4.5",
 		"@smui/button": "^7.0.0-beta.16",
 		"@smui/dialog": "^7.0.0-beta.16",
 		"@smui/layout-grid": "^7.0.0-beta.16",

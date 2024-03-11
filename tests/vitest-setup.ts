@@ -4,6 +4,15 @@
 import '@testing-library/svelte/vitest';
 import '@testing-library/jest-dom/vitest';
 import { setupServer } from 'msw/node';
+import { Crypto } from '@peculiar/webcrypto';
+
+// Enable Web Crypto for tests.
+const cryptoModule = new Crypto();
+Object.defineProperty(window, 'crypto', {
+	get() {
+		return cryptoModule;
+	}
+});
 
 // Request handling with MST; see https://vitest.dev/guide/mocking.html#requests
 export const server = setupServer();

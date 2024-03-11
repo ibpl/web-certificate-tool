@@ -16,23 +16,10 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	export let refuseLabel = ''; // refuseLabel is text displayed on refuse button.
 
 	const dispatch = createEventDispatcher();
-
-	// closeHandler handles confirmation dialog close.
-	function closeHandler(event: CustomEvent<{ action: string }>) {
-		open = false; // To avoid races.
-		switch (event.detail.action) {
-			case 'confirm':
-				dispatch('confirm'); // Dispatch confirmation.
-				break;
-			default: // Handles refuse action, shim click and ESC press.
-				dispatch('refuse'); // Dispatch refusal.
-		}
-	}
 </script>
 
 <Dialog
 	bind:open
-	on:SMUIDialog:closed={closeHandler}
 	aria-labelledby="confirmation-dialog-title"
 	aria-describedby="confirmation-dialog-content"
 >
@@ -40,10 +27,15 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 	<Content id="confirmation-dialog-content">{content}</Content>
 	<Actions>
-		<Button action="confirm">
+		<Button on:click={() => dispatch('confirm')} data-testid="button-confirmation-yes">
 			<Label>{confirmLabel ? confirmLabel : $t('common.yes')}</Label>
 		</Button>
-		<Button action="refuse" defaultAction use={[InitialFocus]}>
+		<Button
+			on:click={() => dispatch('refuse')}
+			defaultAction
+			use={[InitialFocus]}
+			data-testid="button-confirmation-no"
+		>
 			<Label>{refuseLabel ? refuseLabel : $t('common.no')}</Label>
 		</Button>
 	</Actions>

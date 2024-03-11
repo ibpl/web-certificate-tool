@@ -309,7 +309,7 @@ export function bufferToHex(buffer: ArrayBuffer) {
 }
 
 // formatPEM formats string to have each line length equal to 64 octets.
-function formatPEM(pemString: string): string {
+export function formatPEM(pemString: string): string {
 	// Return unmodified string if not longer than 64 chars.
 	if (pemString.length <= 64) {
 		return pemString;

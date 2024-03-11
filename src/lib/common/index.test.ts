@@ -7,7 +7,10 @@ import {
 	resetEnvironment,
 	isValidConfig,
 	FETCH_TIMEOUT,
-	CONFIG_CONTENT_TYPE
+	CONFIG_CONTENT_TYPE,
+	formatPEM,
+	fromPEM,
+	toPEM
 } from './index';
 import { server } from '../../../tests/vitest-setup';
 import { HttpResponse, http } from 'msw';
@@ -339,5 +342,21 @@ describe('initializeEnvironment', () => {
 		url.searchParams.set('tm', 'light');
 		url.searchParams.set('l', 'pl');
 		await expect(initializeEnvironment(url)).resolves.toBe(undefined);
+	});
+});
+
+// Crypto tools.
+
+describe('formatPEM', () => {
+	test('should return unmodified 64-chars PEM string', () => {
+		expect(formatPEM('a'.repeat(64))).toBe('a'.repeat(64));
+	});
+});
+
+describe('fromPEM', () => {
+	test('fromPEM(toPEM()) is identity', () => {
+		expect(
+			new TextDecoder().decode(fromPEM(toPEM(new TextEncoder().encode('a'.repeat(64)), 'TEST')))
+		).toBe('a'.repeat(64));
 	});
 });

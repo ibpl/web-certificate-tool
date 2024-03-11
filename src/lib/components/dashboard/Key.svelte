@@ -73,6 +73,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 		// eslint-disable-next-line no-undef
 		const rsaAlgorithmParameters = <RsaHashedKeyGenParams>algorithmParameters.algorithm;
 		rsaAlgorithmParameters.modulusLength = KEY_SIZE;
+
 		let newKeyPair = await crypto.subtle.generateKey(
 			rsaAlgorithmParameters,
 			true,
@@ -115,6 +116,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	}
 </script>
 
+<!-- /* v8 ignore start */ -->
 <Paper style="margin-bottom: 1rem;">
 	<Title>{$t('dashboard.key')}</Title>
 	<Content>
@@ -151,6 +153,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 				{#if keyPair}
 					<!-- "pointer-events: auto;" required for tooltip over disabled button to work. -->
 					<Button
+						data-testid="button-download-key"
 						on:click={() => {
 							if (!password) {
 								plainConfirmationDialogCallback = downloadKey;
