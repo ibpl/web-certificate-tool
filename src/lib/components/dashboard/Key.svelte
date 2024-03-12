@@ -117,7 +117,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 </script>
 
 <!-- /* v8 ignore start */ -->
-<Paper style="margin-bottom: 1rem;">
+<Paper variant="outlined" style="margin-bottom: 1rem;">
 	<Title>{$t('dashboard.key')}</Title>
 	<Content>
 		<LayoutGrid>

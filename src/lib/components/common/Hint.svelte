@@ -1,19 +1,21 @@
 <!--
-SPDX-License-Identifier: AGPL-3.0-only
-SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://www.ib.pl>
+SPDX-License-Identifier: LicenseRef-Proprietary
+SPDX-FileCopyrightText: 2023 Informatyka Boguslawski sp. z o.o. sp.k. <https://www.ib.pl>
 -->
-
 <script lang="ts">
 	import { Icon } from '@smui/common';
 	import Paper, { Title, Subtitle, Content } from '@smui/paper';
 	import { mdiLightbulbOnOutline } from '@mdi/js';
+
+	// icon is icon to be displayed in hint box.
+	export let icon = mdiLightbulbOnOutline;
 </script>
 
 <div class="hint-container">
-	<Paper class="hint-paper">
+	<Paper class="hint-paper" variant="outlined">
 		<div class="hint-icon smui-paper.smui-paper--raised">
 			<Icon tag="svg" viewBox="0 0 24 24">
-				<path fill="currentColor" d={mdiLightbulbOnOutline} />
+				<path fill="currentColor" d={icon} />
 			</Icon>
 		</div>
 		<div class="hint-text">
@@ -34,7 +36,6 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	* :global(.hint-paper) {
 		flex: 0 1 700px;
 		display: flex;
-		opacity: 0.5;
 		padding: 0;
 	}
 

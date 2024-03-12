@@ -72,9 +72,17 @@ a:visited {
 }
 
 .hint-icon {
-	background-color: #2a2a2e;
+	background-color: rgba(255, 255, 255, 0.05);
+	color: rgba(255, 255, 255, 0.6);
 }
 
+.page-content .smui-paper.smui-paper--outlined {
+	border-color: rgba(255, 255, 255, 0.12);
+}
+
+.hint-paper.smui-paper.smui-paper--outlined {
+	color: rgba(255, 255, 255, 0.6);
+}
 //
 // Some defaults that may be helpful to you.
 // If you just want to use these, and not the classes, you can instead just
