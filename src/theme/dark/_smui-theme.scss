@@ -71,6 +71,10 @@ a:visited {
 	@include linear-progress.buffer-color(color.change(theme.$on-surface, $alpha: 0));
 }
 
+.hint-icon {
+	background-color: #2a2a2e;
+}
+
 //
 // Some defaults that may be helpful to you.
 // If you just want to use these, and not the classes, you can instead just
