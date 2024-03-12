@@ -4,6 +4,7 @@
 	"badResponse": "Nieprawidłowa odpowiedź z serwera.",
 	"changeLanguage": "Zmień język",
 	"changeThemeMode": "Zmień tryb szaty",
+	"closePageWhenFinished": "Gdy zakończysz działania na tej stronie, zamknij ją w przeglądarce aby nie pozostawić dostępu do umieszczonego na niej klucza prywatnego.",
 	"confirmPageLeaving": "Potwierdź opuszczenie strony",
 	"details": "Szczegóły",
 	"error": "Błąd",

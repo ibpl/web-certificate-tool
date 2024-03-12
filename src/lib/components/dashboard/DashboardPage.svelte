@@ -4,9 +4,11 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 -->
 
 <script lang="ts">
+	import Hint from '$lib/components/common/Hint.svelte';
 	import Page from '$lib/components/common/Page.svelte';
 	import Key from '$lib/components/dashboard/Key.svelte';
 	import { progressOpen, settings } from '$lib/stores';
+	import { t } from '$lib/i18n';
 
 	// ownerId is key owner's ID.
 	let ownerId = $settings.ownerId;
@@ -21,4 +23,13 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 
 <Page contentEnabled={!$progressOpen}>
 	<Key bind:ownerId bind:keyPair bind:password />
+
+	<!-- /* v8 ignore next 1 */ -->
+	{#if keyPair}
+		<Hint
+			><div slot="content">
+				{$t('common.closePageWhenFinished')}
+			</div></Hint
+		>
+	{/if}
 </Page>

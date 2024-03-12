@@ -4,6 +4,7 @@
 	"badResponse": "Bad response from server.",
 	"changeLanguage": "Change language",
 	"changeThemeMode": "Change theme mode",
+	"closePageWhenFinished": "When you're done with this page, close it in your browser so that you don't leave access to the private key on it.",
 	"confirmPageLeaving": "Confirm Page Leaving",
 	"details": "Details",
 	"error": "Error",
