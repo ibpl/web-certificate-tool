@@ -84,6 +84,11 @@ a:visited {
 	color: rgba(0, 0, 0, 0.6);
 }
 
+.page-content .mdc-button {
+	height: auto;
+	min-height: var(--mdc-protected-button-container-height, 36px);
+}
+
 //
 // Some defaults that may be helpful to you.
 // If you just want to use these, and not the classes, you can instead just
