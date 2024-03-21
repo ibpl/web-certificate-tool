@@ -1,7 +1,8 @@
 <!--
-SPDX-License-Identifier: LicenseRef-Proprietary
-SPDX-FileCopyrightText: 2023 Informatyka Boguslawski sp. z o.o. sp.k. <https://www.ib.pl>
+SPDX-License-Identifier: AGPL-3.0-only
+SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://www.ib.pl>
 -->
+
 <script lang="ts">
 	import { Icon } from '@smui/common';
 	import Paper, { Title, Subtitle, Content } from '@smui/paper';

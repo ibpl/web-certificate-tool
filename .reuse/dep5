@@ -1,6 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 
-Files: .vscode/*.json src/lib/i18n/*.json src/*.html static/* .prettierrc package.json package-lock.json
+Files: .vscode/*.json src/lib/i18n/*.json src/*.html static/* .prettierrc package.json package-lock.json src/*/__snapshots__/*.test.ts.snap
 Copyright: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://www.ib.pl>
 License: AGPL-3.0-only
 

@@ -12,9 +12,13 @@ import {
 	PrivateKeyInfo,
 	getCrypto,
 	PKCS8ShroudedKeyBag,
-	type ContentEncryptionAesCbcParams
+	type ContentEncryptionAesCbcParams,
+	getAlgorithmParameters,
+	RSAPublicKey,
+	RSAPrivateKey,
+	AlgorithmIdentifier
 } from 'pkijs';
-import { fromBER } from 'asn1js';
+import { fromBER, Null, BitString } from 'asn1js';
 import { Convert } from 'pvtsutils';
 import FileSaver from 'file-saver';
 
@@ -22,6 +26,16 @@ export const CONFIG_CONTENT_TYPE = 'application/json'; // CONFIG_CONTENT_TYPE is
 export const FETCH_TIMEOUT = 10000; // FETCH_TIMEOUT is UI data fetching timeout [ms].
 export const OWNER_ID_MAX_LENGTH = 300; // OWNER_ID_MAX_LENGTH owner's ID lenght limit.
 export const PBKDF2_ITERATION_COUNT = 600000; // PBKDF2_ITERATION_COUNT is number of PBKDF2 iterations for key encryption.
+export const HOMEPAGE_URL = 'https://github.com/ibpl/web-certificate-tool'; // HOMEPAGE_URL is application homepage's URL.
+
+export const ENCRYPTED_PRIVKEY_PEM_REGEXP = new RegExp(
+	'^\\n*-{5}BEGIN ENCRYPTED PRIVATE KEY-{5}\\n([A-Za-z0-9+/=]+\\n)+-{5}END ENCRYPTED PRIVATE KEY-{5}\\n*$',
+	''
+);
+export const UNENCRYPTED_PRIVKEY_PEM_REGEXP = new RegExp(
+	'^\\n*-{5}BEGIN PRIVATE KEY-{5}\\n([A-Za-z0-9+/=]+\\n)+-{5}END PRIVATE KEY-{5}\\n*$',
+	''
+);
 
 // Settings defines application settings.
 export type Settings = {
@@ -340,17 +354,51 @@ export function fromPEM(pem: string): ArrayBuffer {
 	return Convert.FromBase64(base64);
 }
 
-// publicKeyIdentifier returns public key identifier (Subject Key Identifier) from given key pair.
-export async function publicKeyIdentifier(
-	publicKey: CryptoKey,
-	algorithm: AlgorithmIdentifier
+// getKeyIdentifier returns key identifier (public key Subject Key Identifier) from given key pair.
+export async function getKeyIdentifier(
+	kp: CryptoKeyPair,
+	algorithm: globalThis.AlgorithmIdentifier
 ): Promise<string> {
 	const crypto = getCrypto(true);
-	const publicKeyBinary = await crypto.subtle.exportKey('spki', publicKey);
+	const publicKeyBinary = await crypto.exportKey('spki', kp.publicKey);
 	const publicKeyInfo = new PublicKeyInfo({ schema: fromBER(publicKeyBinary).result });
 	return bufferToHex(
 		await crypto.digest(algorithm, publicKeyInfo.subjectPublicKey.valueBlock.valueHexView)
 	);
+}
+
+// getKeyType returns key type.
+export async function getKeyType(kp: CryptoKeyPair): Promise<string> {
+	const crypto = getCrypto(true);
+	const publicKeyBinary = await crypto.exportKey('spki', kp.publicKey);
+	const publicKeyInfo = new PublicKeyInfo({ schema: fromBER(publicKeyBinary).result });
+
+	// Get key type and size.
+	if (publicKeyInfo.algorithm.algorithmId === '1.2.840.113549.1.1.1') {
+		const rsaPublicKeySimple = RSAPublicKey.fromBER(
+			publicKeyInfo.subjectPublicKey.valueBlock.valueHexView
+		);
+		const modulusView = rsaPublicKeySimple.modulus.valueBlock.valueHexView;
+		let modulusBitLength = 0;
+		if (modulusView[0] === 0x00)
+			/* v8 ignore next */
+			modulusBitLength = (rsaPublicKeySimple.modulus.valueBlock.valueHexView.byteLength - 1) * 8;
+		else modulusBitLength = rsaPublicKeySimple.modulus.valueBlock.valueHexView.byteLength * 8;
+
+		return 'RSA-' + modulusBitLength.toString();
+		/* v8 ignore next 13 */
+	} else if (publicKeyInfo.algorithm.algorithmId === '1.2.840.10040.4.1') {
+		return 'DSA';
+	} else if (publicKeyInfo.algorithm.algorithmId === '1.2.840.10045.2.1') {
+		return 'ECDSA';
+	} else if (publicKeyInfo.algorithm.algorithmId === '1.3.101.110') {
+		return 'X25519';
+	} else if (publicKeyInfo.algorithm.algorithmId === '1.3.101.112') {
+		return 'ED25519';
+	} else if (publicKeyInfo.algorithm.algorithmId === '1.3.101.113') {
+		return 'ED448';
+	}
+	return t.get('common.unknown');
 }
 
 // downloadFile makes browser to download file with given name, content type and content.
@@ -362,7 +410,8 @@ export function downloadFile(filename: string, contentType: string, content: Arr
 // downloadPKCS8 downloads given private key in PEM formatted PKCS #8 file with optional encryption
 // (when password is non-empty).
 export async function downloadPKCS8(kp: CryptoKeyPair, password: string, filename: string) {
-	let privateKeyBinary = await crypto.subtle.exportKey('pkcs8', kp.privateKey);
+	const crypto = getCrypto(true);
+	let privateKeyBinary = await crypto.exportKey('pkcs8', kp.privateKey);
 	let pemLabel = 'PRIVATE KEY';
 	if (password) {
 		const pkcs8Simpl = new PrivateKeyInfo({ schema: fromBER(privateKeyBinary).result });
@@ -385,6 +434,115 @@ export async function downloadPKCS8(kp: CryptoKeyPair, password: string, filenam
 		'application/x-pem-file',
 		new TextEncoder().encode(toPEM(privateKeyBinary, pemLabel))
 	);
+}
+
+// readFile reads specified file content and returns it or rejects with error.
+function readFileAsText(file: File) {
+	return new Promise<string>((resolve, reject) => {
+		const fileReader = new FileReader();
+		fileReader.onload = () => {
+			/* v8 ignore next */
+			resolve(typeof fileReader.result == 'string' ? fileReader.result : '');
+		};
+		/* v8 ignore next */
+		fileReader.onerror = (error) => reject(error);
+		fileReader.readAsText(file);
+	});
+}
+
+export let publicKeyInfo: PublicKeyInfo;
+
+// loadPKCS8 loads given private key from given PEM formatted PKCS #8 file with decryption
+// with given password if key is encrypted. The only key type supported now is RSASSA-PKCS1-v1_5.
+export async function loadPKCS8(file: File, password: string): Promise<CryptoKeyPair> {
+	// Read specified file content and verify if its PEM formatted private key (with optional encryption).
+	const fileContent = await readFileAsText(file);
+
+	// isEncrypted is true if file contains encrypted private key.
+	let isEncrypted = false;
+
+	if (ENCRYPTED_PRIVKEY_PEM_REGEXP.test(fileContent)) {
+		isEncrypted = true;
+	} else if (!UNENCRYPTED_PRIVKEY_PEM_REGEXP.test(fileContent)) {
+		throw Error(t.get('dashboard.noPrivateKeyPEMFound'));
+	}
+
+	// Import private key.
+	const crypto = getCrypto(true);
+	const privateKeyDER = fromPEM(fileContent);
+	const algorithmParameters = getAlgorithmParameters('RSASSA-PKCS1-v1_5', 'importKey');
+	// eslint-disable-next-line no-undef
+	const rsaAlgorithmParameters = <RsaHashedImportParams>algorithmParameters.algorithm;
+	let privateKey: CryptoKey;
+	let privateKeyInfo: PrivateKeyInfo;
+
+	// Decrypt key if encrypted.
+	if (isEncrypted) {
+		const pkcs8 = new PKCS8ShroudedKeyBag({ schema: fromBER(privateKeyDER).result });
+		try {
+			// Remove comments below when https://github.com/PeculiarVentures/PKI.js/issues/399 is resolved.
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			await pkcs8.parseInternalValues({ password: Convert.FromUtf8String(password) });
+		} catch (e) {
+			throw Error(t.get('dashboard.invalidPasswordOrUnsupportedKey', { url: HOMEPAGE_URL }));
+		}
+		if (pkcs8.parsedValue) {
+			try {
+				privateKeyInfo = pkcs8.parsedValue;
+				privateKey = await crypto.importKey(
+					'pkcs8',
+					privateKeyInfo.toSchema().toBER(false),
+					rsaAlgorithmParameters,
+					true,
+					['sign']
+				);
+			} catch (e) {
+				throw Error(t.get('dashboard.invalidOrUnsupportedKey', { url: HOMEPAGE_URL }));
+			}
+			/* v8 ignore next 3 */
+		} else {
+			throw Error(t.get('dashboard.invalidOrUnsupportedKey', { url: HOMEPAGE_URL }));
+		}
+	} else {
+		try {
+			privateKeyInfo = new PrivateKeyInfo({ schema: fromBER(privateKeyDER).result });
+			privateKey = await crypto.importKey('pkcs8', privateKeyDER, rsaAlgorithmParameters, true, [
+				'sign'
+			]);
+		} catch (e) {
+			throw Error(t.get('dashboard.invalidOrUnsupportedKey', { url: HOMEPAGE_URL }));
+		}
+	}
+	const privateRSAKey = <RSAPrivateKey>privateKeyInfo.parsedKey;
+
+	// Generate and import public RSA key from public key data stored with imported private key.
+	const publicRSAKey = new RSAPublicKey({
+		modulus: privateRSAKey.modulus,
+		publicExponent: privateRSAKey.publicExponent
+	});
+
+	const algorithmIdentifier = new AlgorithmIdentifier({
+		algorithmId: '1.2.840.113549.1.1.1', // RSA
+		algorithmParams: new Null()
+	});
+
+	publicKeyInfo = new PublicKeyInfo({
+		parsedKey: publicRSAKey,
+		algorithm: algorithmIdentifier,
+		subjectPublicKey: new BitString({ valueHex: publicRSAKey.toSchema().toBER(false) })
+	});
+
+	const publicKey = await crypto.importKey(
+		'spki',
+		publicKeyInfo.toSchema().toBER(false),
+		rsaAlgorithmParameters,
+		true,
+		algorithmParameters.usages
+	);
+
+	// Return prepared key pair.
+	return <CryptoKeyPair>{ privateKey: privateKey, publicKey: publicKey };
 }
 
 // Callback is callback function definition.

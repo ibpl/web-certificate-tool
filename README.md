@@ -149,6 +149,24 @@ Setting source precendence (from highest to lowest):
 - `config.json`,
 - user's system/browser current setting (`en` locale will be used as fallback if users's browser locale is not [supported](src/lib/i18n/lang.json)).
 
+## Usage
+
+Application operates on data (i.e. keys, certificate requests, certificates) locally in browser using [PKIjs](https://pkijs.org/).
+
+### Keys
+
+#### Generation
+
+Application allows to generate RSA-2048 keys.
+
+#### Saving
+
+Application allows to save private RSA key in PKCS #8 PEM formatted file without encryption or (if password is specified) encrypted with PBKDF2/SHA-256/AES-256-CBC (similar as openssl 3.0 does).
+
+#### Loading
+
+Application allows to load private RSA key from PKCS #8 PEM formatted file without encryption or (if password is specified) encrypted with alghorithm supported by [PKIjs](https://pkijs.org/) (i.e. PBKDF2/SHA-256/AES-256-CBC as saved by this application or generated with openssl 3.0). Keys are loaded locally in browser using [PKIjs](https://pkijs.org/)
+
 ## Licenses
 
 Content in this repository is licensed under the [GNU Affero General Public License Version 3 (AGPL v3)](LICENSES/AGPL-3.0-only.txt). Other licenses may be specified as well where third-party content is used.

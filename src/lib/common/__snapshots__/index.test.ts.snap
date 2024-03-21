@@ -1,0 +1,36 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`getAlgorithmParameters > should return expected parameters for RSASSA-PKCS1-v1_5 generateKey 1`] = `
+{
+  "algorithm": {
+    "hash": {
+      "name": "SHA-256",
+    },
+    "modulusLength": 2048,
+    "name": "RSASSA-PKCS1-v1_5",
+    "publicExponent": Uint8Array [
+      1,
+      0,
+      1,
+    ],
+  },
+  "usages": [
+    "sign",
+    "verify",
+  ],
+}
+`;
+
+exports[`getAlgorithmParameters > should return expected parameters for RSASSA-PKCS1-v1_5 importKey 1`] = `
+{
+  "algorithm": {
+    "hash": {
+      "name": "SHA-256",
+    },
+    "name": "RSASSA-PKCS1-v1_5",
+  },
+  "usages": [
+    "verify",
+  ],
+}
+`;

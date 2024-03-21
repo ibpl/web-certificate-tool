@@ -18,6 +18,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	} from '@mdi/js';
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
+	import { HOMEPAGE_URL } from '$lib/common';
 
 	// title is string displayed in bar.
 	export let title = '';
@@ -78,21 +79,24 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 		<div style="display: flex; justify-content: flex-end; align-items: baseline; margin-top: 1rem;">
 			<!-- Language change button and menu. -->
 			<div class="menu-button">
-				<Button
-					data-testid="button-language"
-					title={$t('common.changeLanguage')}
-					on:click={() => menuLanguage.setOpen(true)}
-					variant="outlined"
-					style="padding: 0; min-width: 70px;"
-				>
-					<Icon tag="svg" style="width: 1em; height: auto; margin: 0 5px;" viewBox="0 0 24 24">
-						<path fill="currentColor" d={mdiWeb} />
-					</Icon>
-					<Label>{$locale}</Label>
-					<Icon tag="svg" style="width: 1em; height: auto; margin: 0;" viewBox="0 0 24 24">
-						<path fill="currentColor" d={mdiMenuDown} />
-					</Icon>
-				</Button>
+				<!-- #key stuff below required for button label to be re-rendered correctly on locale change. -->
+				{#key $locale}
+					<Button
+						data-testid="button-language"
+						title={$t('common.changeLanguage')}
+						on:click={() => menuLanguage.setOpen(true)}
+						variant="outlined"
+						style="padding: 0; min-width: 70px;"
+					>
+						<Icon tag="svg" style="width: 1em; height: auto; margin: 0 5px;" viewBox="0 0 24 24">
+							<path fill="currentColor" d={mdiWeb} />
+						</Icon>
+						<Label>{$locale}</Label>
+						<Icon tag="svg" style="width: 1em; height: auto; margin: 0;" viewBox="0 0 24 24">
+							<path fill="currentColor" d={mdiMenuDown} />
+						</Icon>
+					</Button>
+				{/key}
 				<Menu bind:this={menuLanguage} anchorCorner="BOTTOM_START">
 					<List>
 						{#each $locales as l}
@@ -107,7 +111,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 									if (browser) {
 										const urlSearchParams = new URLSearchParams(window.location.search);
 										urlSearchParams.set('l', l);
-										await goto('/?' + urlSearchParams.toString(), {
+										await goto(window.location.pathname + '?' + urlSearchParams.toString(), {
 											replaceState: true,
 											invalidateAll: false
 										});
@@ -196,7 +200,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	<div class="mdc-theme--secondary" style="text-align: right">
 		<small
 			><!-- eslint-disable-line svelte/no-at-html-tags -->{@html $t('common.licenseInfo', {
-				url: 'https://github.com/ibpl/web-certificate-tool'
+				url: HOMEPAGE_URL
 			})}</small
 		>
 	</div>

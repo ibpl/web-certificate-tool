@@ -33,3 +33,6 @@ export const pageLeft = writable<boolean | undefined>(false);
 
 // snackbarMessage is message to be displayed in snackbar.
 export const snackbarMessage = writable<string | undefined>(undefined);
+
+// errorDialogMessage is message to be displayed in error dialog.
+export const errorDialogMessage = writable<string | undefined>(undefined);

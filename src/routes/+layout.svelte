@@ -17,8 +17,8 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	import { dir, locale } from '$lib/i18n';
 	import { onMount } from 'svelte';
 	import ProgressBar from '$lib/components/common/ProgressBar.svelte';
-	import PageLeaveDialog from '$lib/components/common/PageLeaveDialog.svelte';
 	import InformationSnackbar from '$lib/components/common/InformationSnackbar.svelte';
+	import ErrorDialog from '$lib/components/common/ErrorDialog.svelte';
 
 	// handleWindowResize updates smallWindow global flag on application window resize.
 	function handleWindowResize() {
@@ -71,8 +71,8 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 
 <slot />
 
-<!-- Modal dialog for page leaving confirmation when unsaved changes exists. -->
-<PageLeaveDialog />
+<!-- Modal dialog for displaying error messages. -->
+<ErrorDialog />
 
 <!-- Information snackbar. -->
 <InformationSnackbar />

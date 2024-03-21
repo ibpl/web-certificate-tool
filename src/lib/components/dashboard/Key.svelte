@@ -7,12 +7,14 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	import { getAlgorithmParameters, getCrypto } from 'pkijs';
 	import Button, { Label } from '@smui/button';
 	import {
-		publicKeyIdentifier,
+		getKeyIdentifier,
 		downloadPKCS8,
 		type Callback,
-		OWNER_ID_MAX_LENGTH
+		OWNER_ID_MAX_LENGTH,
+		loadPKCS8,
+		getKeyType
 	} from '$lib/common';
-	import { progressOpen, snackbarMessage } from '$lib/stores';
+	import { progressOpen, snackbarMessage, errorDialogMessage } from '$lib/stores';
 	import { t } from '$lib/i18n';
 	import Paper, { Title, Content } from '@smui/paper';
 	import Password from '$lib/components/common/Password.svelte';
@@ -34,11 +36,14 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	// KEY_SIZE is key size.
 	const KEY_SIZE = 2048;
 
-	// publicKeySha1 is public key SHA-1 identifier.
-	let publicKeySha1 = '';
+	// keyIdentifierSha1 is public key SHA-1 identifier.
+	let keyIdentifierSha1 = '';
 
-	// publicKeySha256 is public key SHA-256 identifier.
-	let publicKeySha256 = '';
+	// keyIdentifierSha256 is public key SHA-256 identifier.
+	let keyIdentifierSha256 = '';
+
+	// keyType is key type.
+	let keyType = '';
 
 	// plainConfirmationDialogOpen is plain key download confirmation dialog.
 	let plainConfirmationDialogOpen = false;
@@ -49,50 +54,66 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	// Get crypto engine.
 	const crypto = getCrypto(true);
 
-	// updatePublicKeyIdentifiers updates public key identifiers on keypair change.
+	// updateKeyInformation updates public key identifiers on keypair change.
 	// eslint-disable-next-line no-undef
-	async function updatePublicKeyIdentifiers(kp: CryptoKeyPair | undefined) {
+	async function updateKeyInformation(kp: CryptoKeyPair | undefined) {
 		if (!kp) {
-			publicKeySha1 = '';
-			publicKeySha256 = '';
+			keyIdentifierSha1 = '';
+			keyIdentifierSha256 = '';
 		} else {
-			// Calculate new public key identifiers.
-			publicKeySha1 = await publicKeyIdentifier(kp.publicKey, 'SHA-1');
-			publicKeySha256 = await publicKeyIdentifier(kp.publicKey, 'SHA-256');
+			try {
+				keyIdentifierSha1 = await getKeyIdentifier(kp, 'SHA-1');
+				keyIdentifierSha256 = await getKeyIdentifier(kp, 'SHA-256');
+				keyType = await getKeyType(kp);
+			} catch (e) {
+				keyIdentifierSha1 = '?';
+				keyIdentifierSha256 = '?';
+				keyType = '?';
+				$errorDialogMessage =
+					(e instanceof Error ? e.message + '. ' : '') +
+					t.get('dashboard.errorReadingKeyInformation') +
+					'.';
+			}
 		}
 	}
-	$: updatePublicKeyIdentifiers(keyPair);
+	$: updateKeyInformation(keyPair);
 
 	// generateKey generaters new crypto key pair.
 	async function generateKey() {
 		$progressOpen = true;
 		$snackbarMessage = undefined;
 
-		// Generate new RSA key pair.
-		const algorithmParameters = getAlgorithmParameters('RSASSA-PKCS1-v1_5', 'generateKey');
-		// eslint-disable-next-line no-undef
-		const rsaAlgorithmParameters = <RsaHashedKeyGenParams>algorithmParameters.algorithm;
-		rsaAlgorithmParameters.modulusLength = KEY_SIZE;
+		try {
+			// Generate new RSA key pair.
+			const algorithmParameters = getAlgorithmParameters('RSASSA-PKCS1-v1_5', 'generateKey');
+			// eslint-disable-next-line no-undef
+			const rsaAlgorithmParameters = <RsaHashedKeyGenParams>algorithmParameters.algorithm;
+			rsaAlgorithmParameters.modulusLength = KEY_SIZE;
 
-		let newKeyPair = await crypto.subtle.generateKey(
-			rsaAlgorithmParameters,
-			true,
-			algorithmParameters.usages
-		);
+			let newKeyPair = await crypto.generateKey(
+				rsaAlgorithmParameters,
+				true,
+				algorithmParameters.usages
+			);
 
-		// Download new key in PEM formatted PKCS #8 file.
-		let newPublicKeySha256 = await publicKeyIdentifier(newKeyPair.publicKey, 'SHA-256');
-		downloadPKCS8(
-			newKeyPair,
-			password,
-			ownerId + '_' + newPublicKeySha256.replaceAll(':', '').substring(0, 10) + '.key'
-		);
+			// Download new key in PEM formatted PKCS #8 file. Generate filename fron oid and first 10 key SHA256 chars.
+			let newPublicKeySha256 = await getKeyIdentifier(newKeyPair, 'SHA-256');
+			downloadPKCS8(
+				newKeyPair,
+				password,
+				ownerId + '_' + newPublicKeySha256.replaceAll(':', '').substring(0, 10) + '.key'
+			);
 
-		// Update key pair with new key pair.
-		keyPair = newKeyPair;
+			// Update key pair with new key pair.
+			keyPair = newKeyPair;
 
-		$progressOpen = false;
-		$snackbarMessage = $t('dashboard.keyGeneratedSuccessfully');
+			$progressOpen = false;
+			$snackbarMessage = $t('dashboard.keyGeneratedSuccessfully');
+		} catch (e) {
+			$progressOpen = false;
+			$errorDialogMessage =
+				(e instanceof Error ? e.message + '. ' : '') + t.get('dashboard.errorGeneratingKey') + '.';
+		}
 	}
 
 	// downloadKey downloads current crypto key pair.
@@ -103,16 +124,48 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 		}
 
 		$progressOpen = true;
+		$snackbarMessage = undefined;
 
-		// Download new key in PEM formatted PKCS #8 file.
-		let publicKeySha256 = await publicKeyIdentifier(keyPair.publicKey, 'SHA-256');
-		downloadPKCS8(
-			keyPair,
-			password,
-			ownerId + '_' + publicKeySha256.replaceAll(':', '').substring(0, 10) + '.key'
-		);
+		try {
+			// Download new key in PEM formatted PKCS #8 file.
+			let keyIdentifierSha256 = await getKeyIdentifier(keyPair, 'SHA-256');
 
-		$progressOpen = false;
+			downloadPKCS8(
+				keyPair,
+				password,
+				ownerId + '_' + keyIdentifierSha256.replaceAll(':', '').substring(0, 10) + '.key'
+			);
+			$progressOpen = false;
+		} catch (e) {
+			$progressOpen = false;
+			$errorDialogMessage =
+				(e instanceof Error ? e.message + '. ' : '') + t.get('dashboard.errorDownloadingKey') + '.';
+		}
+	}
+	// keyFileInput is hidden file input used for picking key file to load.
+	let keyFileInput: HTMLInputElement;
+
+	// loadKey loads key from file picked with keyFileInput.
+	async function loadKey() {
+		// Require one key file to be selected.
+		if (!keyFileInput.files || keyFileInput.files.length != 1) {
+			return;
+		}
+		$progressOpen = true;
+		$snackbarMessage = undefined;
+
+		try {
+			keyPair = await loadPKCS8(keyFileInput.files[0], password);
+			$progressOpen = false;
+			$snackbarMessage = $t('dashboard.keyLoadedSuccessfully');
+		} catch (e) {
+			$progressOpen = false;
+			$errorDialogMessage =
+				/* v8 ignore next */
+				(e instanceof Error ? e.message + '. ' : '') +
+				t.get('dashboard.errorLoadingKeyFromFile') +
+				'.';
+		}
 	}
 </script>
 
@@ -123,11 +176,16 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 		<LayoutGrid>
 			{#if keyPair}
 				<Cell spanDevices={{ desktop: 12, tablet: 8, phone: 4 }}>
-					{$t('dashboard.type')}: <strong>RSA-{KEY_SIZE}</strong><br />
+					{$t('dashboard.type')}: <strong data-testid="strong-key-type">{keyType}</strong><br />
 					{$t('dashboard.keyIdentifier', { type: 'SHA1' })}:
-					<strong style="overflow-wrap: break-word;">{publicKeySha1}</strong><br />
+					<strong data-testid="strong-key-sha1" style="overflow-wrap: break-word;"
+						>{keyIdentifierSha1}</strong
+					>
+					<br />
 					{$t('dashboard.keyIdentifier', { type: 'SHA256' })}:
-					<strong style="overflow-wrap: break-word;">{publicKeySha256}</strong>
+					<strong data-testid="strong-key-sha256" style="overflow-wrap: break-word;"
+						>{keyIdentifierSha256}</strong
+					>
 				</Cell>
 			{/if}
 			<Cell spanDevices={{ desktop: 6, tablet: 4, phone: 4 }}>
@@ -172,6 +230,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 				{/if}
 				<!-- "pointer-events: auto;" required for tooltip over disabled button to work. -->
 				<Button
+					data-testid="button-generate-and-download-key"
 					on:click={() => {
 						if (!password) {
 							plainConfirmationDialogCallback = generateKey;
@@ -186,6 +245,26 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 					style="pointer-events: auto;"
 				>
 					<Label>{$t('dashboard.generateAndDownloadNewKey')}</Label>
+				</Button>
+				<!-- Hidden file input will pick file and call when called with file load button below. -->
+				<input
+					data-testid="input-load-key"
+					bind:this={keyFileInput}
+					type="file"
+					accept=".key"
+					on:change={loadKey}
+					style="display: none;"
+				/>
+				<!-- "pointer-events: auto;" required for tooltip over disabled button to work. -->
+				<Button
+					data-testid="button-load-key"
+					on:click={() => keyFileInput.click()}
+					variant={keyPair ? 'outlined' : 'raised'}
+					disabled={ownerId == ''}
+					title={ownerId == '' ? $t('dashboard.ownerIdFieldCannotBeEmpty') : undefined}
+					style="pointer-events: auto;"
+				>
+					<Label>{$t('dashboard.loadExistingKeyFromFile')}</Label>
 				</Button>
 			</Cell>
 		</LayoutGrid>

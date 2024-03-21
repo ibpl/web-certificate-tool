@@ -16,6 +16,18 @@ import { server } from '../../../tests/vitest-setup';
 import { HttpResponse, http } from 'msw';
 import lang from '$lib/i18n/lang.json';
 import { OWNER_ID_MAX_LENGTH } from '$lib/common';
+import { getAlgorithmParameters } from 'pkijs';
+
+// PKI.js RSASSA-PKCS1-v1_5 parameters.
+describe('getAlgorithmParameters', () => {
+	test('should return expected parameters for RSASSA-PKCS1-v1_5 importKey', () => {
+		expect(getAlgorithmParameters('RSASSA-PKCS1-v1_5', 'importKey')).toMatchSnapshot();
+	});
+
+	test('should return expected parameters for RSASSA-PKCS1-v1_5 generateKey', () => {
+		expect(getAlgorithmParameters('RSASSA-PKCS1-v1_5', 'generateKey')).toMatchSnapshot();
+	});
+});
 
 // Configuration validation.
 describe('isValidConfig', () => {

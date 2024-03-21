@@ -24,6 +24,7 @@
 	"themeModeSystem": "System",
 	"timeout": "Timeout communicating with server.",
 	"togglePasswordVisibility": "Toggle password visibility.",
+	"unknown": "unknown",
 	"unknownError": "Unknown error.",
 	"unsupportedBrowser": "Unsupported browser.",
 	"url": "URL",
