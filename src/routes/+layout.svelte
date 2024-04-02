@@ -30,6 +30,9 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 
 	// Stuff to execute on first component rendering.
 	onMount(() => {
+		// Remove initial loader when page is ready.
+		document.getElementById('initial-loader')?.remove();
+
 		// Adjust initial page mode to window resolution.
 		handleWindowResize();
 	});
