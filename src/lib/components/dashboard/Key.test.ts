@@ -901,6 +901,7 @@ describe('Key', () => {
 		// Click generate button key, cancel abort operation in encryption dialog.
 		const spy = vi.spyOn(FileSaver, 'saveAs');
 		global.URL.createObjectURL = vi.fn();
+		global.URL.revokeObjectURL = vi.fn();
 		await user.click(buttonGenerateKey);
 		await user.click(screen.getByTestId('button-confirmation-no'));
 		await vi.waitFor(() => expect(spy).toHaveBeenCalledTimes(0), { timeout: 3000 });
@@ -941,10 +942,11 @@ describe('Key', () => {
 		await user.type(inputOwnerId, 'a'.repeat(OWNER_ID_MAX_LENGTH));
 		expect(buttonGenerateKey.getAttribute('disabled')).toBe(null);
 
-		// Provide password and click key generate button to generate and dwonload new key.
+		// Provide password and click key generate button to generate and download new key.
 		await user.type(inputPassword, 'b'.repeat(30));
 		const spy = vi.spyOn(FileSaver, 'saveAs');
 		global.URL.createObjectURL = vi.fn();
+		global.URL.revokeObjectURL = vi.fn();
 		await user.click(buttonGenerateKey);
 		await vi.waitFor(() => expect(spy).toHaveBeenCalledTimes(1), { timeout: 3000 });
 		await vi.waitFor(() => expect(screen.queryByText(/SHA1 identifier/i)).toBeTruthy());
@@ -952,7 +954,7 @@ describe('Key', () => {
 
 		// Click key download button to download existing key.
 		await user.click(screen.getByTestId('button-download-key'));
-		await vi.waitFor(() => expect(spy).toHaveBeenCalledTimes(1));
+		await vi.waitFor(() => expect(spy).toHaveBeenCalledTimes(2), { timeout: 3000 });
 	}, 20000);
 
 	test('uploading invalid key fails with error', async () => {
