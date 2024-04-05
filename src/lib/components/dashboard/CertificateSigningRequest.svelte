@@ -7,6 +7,8 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	import { AttributeTypeAndValue, CertificationRequest } from 'pkijs';
 	import { Utf8String } from 'asn1js';
 	import Button, { Label } from '@smui/button';
+	import { Icon } from '@smui/common';
+	import { mdiFileOutline, mdiContentCopy, mdiEmailOutline, mdiDownload } from '@mdi/js';
 	import { progressOpen, snackbarMessage, errorDialogMessage } from '$lib/stores';
 	import { t } from '$lib/i18n';
 	import Paper, { Title, Content } from '@smui/paper';
@@ -132,6 +134,9 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 							: undefined}
 						style="pointer-events: auto;"
 					>
+						<Icon tag="svg" viewBox="0 0 24 24">
+							<path d={mdiFileOutline} />
+						</Icon>
 						<Label>{$t('dashboard.generateCertificateSigningRequest')}</Label>
 					</Button>
 				{:else}
@@ -144,6 +149,9 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 					>
 						<!-- "pointer-events: auto;" required for tooltip over disabled button to work. -->
 						<Button variant="outlined" style="pointer-events: auto;">
+							<Icon tag="svg" viewBox="0 0 24 24">
+								<path d={mdiContentCopy} />
+							</Icon>
 							<Label>{$t('dashboard.copyCsrToClipboard')}</Label>
 						</Button>
 					</div>
@@ -156,6 +164,9 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 						variant="outlined"
 						style="pointer-events: auto;"
 					>
+						<Icon tag="svg" viewBox="0 0 24 24">
+							<path d={mdiDownload} />
+						</Icon>
 						<Label>{$t('dashboard.downloadCsr')}</Label>
 					</Button>
 					<!-- "pointer-events: auto;" required for tooltip over disabled button to work. -->
@@ -171,6 +182,9 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 						variant="outlined"
 						style="pointer-events: auto;"
 					>
+						<Icon tag="svg" viewBox="0 0 24 24">
+							<path d={mdiEmailOutline} />
+						</Icon>
 						<Label>{$t('dashboard.sendCsrViaEmail')}</Label>
 					</Button>
 				{/if}

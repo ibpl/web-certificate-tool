@@ -6,6 +6,8 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 <script lang="ts">
 	import { getAlgorithmParameters, getCrypto } from 'pkijs';
 	import Button, { Label } from '@smui/button';
+	import { Icon } from '@smui/common';
+	import { mdiFileMoveOutline, mdiUpload, mdiDownload } from '@mdi/js';
 	import {
 		getKeyIdentifier,
 		downloadPKCS8,
@@ -232,6 +234,9 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 						title={ownerId == '' ? $t('dashboard.ownerIdFieldCannotBeEmpty') : undefined}
 						style="pointer-events: auto;"
 					>
+						<Icon tag="svg" viewBox="0 0 24 24">
+							<path d={mdiDownload} />
+						</Icon>
 						<Label>{$t('dashboard.downloadKey')}</Label>
 					</Button>
 				{/if}
@@ -251,6 +256,9 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 					title={ownerId == '' ? $t('dashboard.ownerIdFieldCannotBeEmpty') : undefined}
 					style="pointer-events: auto;"
 				>
+					<Icon tag="svg" viewBox="0 0 24 24">
+						<path d={mdiFileMoveOutline} />
+					</Icon>
 					<Label>{$t('dashboard.generateAndDownloadNewKey')}</Label>
 				</Button>
 				<!-- Hidden file input will pick file and call when called with file load button below. -->
@@ -271,6 +279,9 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 					title={ownerId == '' ? $t('dashboard.ownerIdFieldCannotBeEmpty') : undefined}
 					style="pointer-events: auto;"
 				>
+					<Icon tag="svg" viewBox="0 0 24 24">
+						<path d={mdiUpload} />
+					</Icon>
 					<Label>{$t('dashboard.loadExistingKeyFromFile')}</Label>
 				</Button>
 			</Cell>
