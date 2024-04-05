@@ -79,7 +79,10 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 
 			downloadPKCS10(
 				csrPem,
-				ownerId + '_' + keyIdentifierSha256.replaceAll(':', '').substring(0, 10) + '.csr'
+				ownerId.substring(0, 50) +
+					'_' +
+					keyIdentifierSha256.replaceAll(':', '').substring(0, 10) +
+					'.csr'
 			);
 			$progressOpen = false;
 		} catch (e) {

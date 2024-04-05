@@ -101,7 +101,10 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 			downloadPKCS8(
 				newKeyPair,
 				password,
-				ownerId + '_' + newPublicKeySha256.replaceAll(':', '').substring(0, 10) + '.key'
+				ownerId.substring(0, 50) +
+					'_' +
+					newPublicKeySha256.replaceAll(':', '').substring(0, 10) +
+					'.key'
 			);
 
 			// Update key pair with new key pair.
@@ -133,7 +136,10 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 			downloadPKCS8(
 				keyPair,
 				password,
-				ownerId + '_' + keyIdentifierSha256.replaceAll(':', '').substring(0, 10) + '.key'
+				ownerId.substring(0, 50) +
+					'_' +
+					keyIdentifierSha256.replaceAll(':', '').substring(0, 10) +
+					'.key'
 			);
 			$progressOpen = false;
 		} catch (e) {
