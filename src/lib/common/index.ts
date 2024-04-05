@@ -436,6 +436,11 @@ export async function downloadPKCS8(kp: CryptoKeyPair, password: string, filenam
 	);
 }
 
+// downloadPKCS10 downloads given CSR PEM content in file.
+export async function downloadPKCS10(csrPem: string, filename: string) {
+	downloadFile(filename, 'application/x-pem-file', new TextEncoder().encode(csrPem));
+}
+
 // readFile reads specified file content and returns it or rejects with error.
 function readFileAsText(file: File) {
 	return new Promise<string>((resolve, reject) => {

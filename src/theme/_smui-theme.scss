@@ -138,8 +138,21 @@ caption {
 }
 
 code,
-pre {
+pre,
+.mdc-text-field__input.code {
 	font-family: 'Roboto Mono', monospace;
+}
+
+.code {
+	background-color: var(--mdc-theme-on-surface);
+	color: var(--mdc-theme-surface);
+	padding: 1.25em 1em;
+	border-radius: 5px;
+	margin-top: 1em;
+}
+
+.code-disabled {
+	opacity: 50%;
 }
 
 small {

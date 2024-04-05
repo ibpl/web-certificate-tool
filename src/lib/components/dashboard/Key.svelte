@@ -127,7 +127,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 		$snackbarMessage = undefined;
 
 		try {
-			// Download new key in PEM formatted PKCS #8 file.
+			// Download key in PEM formatted PKCS #8 file.
 			let keyIdentifierSha256 = await getKeyIdentifier(keyPair, 'SHA-256');
 
 			downloadPKCS8(
@@ -142,6 +142,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 				(e instanceof Error ? e.message + '. ' : '') + t.get('dashboard.errorDownloadingKey') + '.';
 		}
 	}
+
 	// keyFileInput is hidden file input used for picking key file to load.
 	let keyFileInput: HTMLInputElement;
 

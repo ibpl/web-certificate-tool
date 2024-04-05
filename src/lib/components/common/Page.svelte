@@ -91,6 +91,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 						<Icon tag="svg" style="width: 1em; height: auto; margin: 0 5px;" viewBox="0 0 24 24">
 							<path fill="currentColor" d={mdiWeb} />
 						</Icon>
+						<!-- /* v8 ignore next */ -->
 						<Label>{$locale}</Label>
 						<Icon tag="svg" style="width: 1em; height: auto; margin: 0;" viewBox="0 0 24 24">
 							<path fill="currentColor" d={mdiMenuDown} />
