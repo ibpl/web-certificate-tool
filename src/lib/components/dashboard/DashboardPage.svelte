@@ -10,6 +10,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	import CertificateSigningRequest from '$lib/components/dashboard/CertificateSigningRequest.svelte';
 	import { progressOpen, settings } from '$lib/stores';
 	import { t } from '$lib/i18n';
+	import { mdiAlertOutline } from '@mdi/js';
 
 	// ownerId is key owner's ID.
 	let ownerId = $settings.ownerId;
@@ -28,7 +29,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 
 	<!-- /* v8 ignore next 1 */ -->
 	{#if keyPair}
-		<Hint
+		<Hint icon={mdiAlertOutline}
 			><div slot="content">
 				{$t('common.closePageWhenFinished')}
 			</div></Hint
