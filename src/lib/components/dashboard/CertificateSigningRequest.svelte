@@ -24,7 +24,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	// eslint-disable-next-line no-undef
 	export let keyPair: CryptoKeyPair | undefined;
 
-	// csr is certificate signing request.
+	// csrPem is certificate signing request in PEM format.
 	export let csrPem = '';
 
 	// updateCsr removes previous CSR on key pair or owner's ID change.

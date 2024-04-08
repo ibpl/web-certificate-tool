@@ -442,7 +442,7 @@ export async function downloadPKCS10(csrPem: string, filename: string) {
 }
 
 // readFile reads specified file content and returns it or rejects with error.
-function readFileAsText(file: File) {
+export function readFileAsText(file: File) {
 	return new Promise<string>((resolve, reject) => {
 		const fileReader = new FileReader();
 		fileReader.onload = () => {

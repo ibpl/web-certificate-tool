@@ -8,6 +8,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	import Page from '$lib/components/common/Page.svelte';
 	import Key from '$lib/components/dashboard/Key.svelte';
 	import CertificateSigningRequest from '$lib/components/dashboard/CertificateSigningRequest.svelte';
+	import Certificate from '$lib/components/dashboard/Certificate.svelte';
 	import { progressOpen, settings } from '$lib/stores';
 	import { t } from '$lib/i18n';
 	import { mdiAlertOutline } from '@mdi/js';
@@ -26,6 +27,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 <Page contentEnabled={!$progressOpen}>
 	<Key bind:ownerId bind:keyPair bind:password />
 	<CertificateSigningRequest bind:ownerId bind:keyPair />
+	<Certificate bind:ownerId bind:keyPair />
 
 	<!-- /* v8 ignore next 1 */ -->
 	{#if keyPair}
