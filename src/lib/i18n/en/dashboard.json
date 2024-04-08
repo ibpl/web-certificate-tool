@@ -9,7 +9,7 @@
 	"copyToClipboardSuccess": "Copied to clipboard.",
 	"crtLoadedSuccessfully": "Certificate loaded successfully.",
 	"csrGeneratedSuccessfully": "CSR generated successfully.",
-	"downloadCsr": "DowncrtDoesNotMatchOwnerIdoad CSR",
+	"downloadCsr": "Download CSR",
 	"downloadKey": "Download key",
 	"errorDownloadingCrt": "Certificate was not downloaded",
 	"errorDownloadingCsr": "CSR was not downloaded",
