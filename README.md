@@ -107,10 +107,13 @@ The application files ready to be copied to production webserver will be in the 
 
 After successful build, copy files from `build` subdirectory to directory served (as static content) over HTTPS (i.e. by [Apache](https://httpd.apache.org/)) and access it using up-to-date web browser with JavaScript enabled.
 
-For better security cosider serving all application files with [response security headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) that disallow application to connect to any external services i.e.
+For better security cosider:
+
+- serving all application files over HTTPS with [`Strict-Transport-Security: 31536000`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security) header,
+- serving all application files with [response security headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) that allows application to load only required resources i.e.
 
 ```
-Content-Security-Policy: default-src 'self'
+Content-Security-Policy: default-src 'none'; script-src 'unsafe-inline' 'self'; connect-src 'self'; style-src 'unsafe-inline' 'self'; img-src 'self' data:; font-src 'self' data:;
 ```
 
 ## Configuration
