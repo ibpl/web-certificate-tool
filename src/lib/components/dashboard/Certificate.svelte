@@ -6,15 +6,21 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 <script lang="ts">
 	import Button, { Label } from '@smui/button';
 	import { Icon } from '@smui/common';
-	import { mdiUpload } from '@mdi/js';
+	import { mdiUpload, mdiFileMoveOutline } from '@mdi/js';
 	import { progressOpen, snackbarMessage, errorDialogMessage } from '$lib/stores';
 	import { t } from '$lib/i18n';
 	import Paper, { Title, Content } from '@smui/paper';
 	import LayoutGrid, { Cell } from '@smui/layout-grid';
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
-	import { readFileAsText, fromPEM, bufferToHex } from '$lib/common';
-	import { getCrypto, Certificate, PrivateKeyInfo, PublicKeyInfo, PFX } from 'pkijs';
+	import {
+		readFileAsText,
+		fromPEM,
+		bufferToHex,
+		downloadPKCS12,
+		getKeyIdentifier
+	} from '$lib/common';
+	import { getCrypto, Certificate, PublicKeyInfo } from 'pkijs';
 	import { fromBER } from 'asn1js';
 	import moment from 'moment';
 
@@ -24,6 +30,9 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	// keyPair is crypto key pair.
 	// eslint-disable-next-line no-undef
 	export let keyPair: CryptoKeyPair | undefined;
+
+	// password is key pair encryption password.
+	export let password = '';
 
 	// certificate is parsed and validated certificate.
 	let certificate: Certificate | undefined = undefined;
@@ -131,15 +140,50 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 		} catch (e) {
 			$progressOpen = false;
 			$errorDialogMessage =
-				/* v8 ignore next */
 				(e instanceof Error ? e.message + '. ' : '') +
 				t.get('dashboard.errorLoadingCrtFromFile') +
 				'.';
 		}
 	}
+
+	// generatePKCS12 generates PKCS #12 archive with private key and certificate and download it.
+	async function generatePKCS12() {
+		// Just return if no key pair is present.
+		if (!ownerId || !keyPair || !certificate) {
+			return;
+		}
+
+		$progressOpen = true;
+		$snackbarMessage = undefined;
+
+		try {
+			const keyIdentifierSha256 = await getKeyIdentifier(keyPair, 'SHA-256');
+
+			$snackbarMessage = t.get('dashboard.pleaseWaitFewMinutes');
+
+			await downloadPKCS12(
+				keyPair,
+				certificate,
+				ownerId,
+				password,
+				ownerId.substring(0, 50) +
+					'_' +
+					keyIdentifierSha256.replaceAll(':', '').substring(0, 10) +
+					'_' +
+					crtSerialNumber.replaceAll(':', '').substring(0, 10) +
+					'.p12'
+			);
+			$progressOpen = false;
+			$snackbarMessage = undefined;
+		} catch (e) {
+			$progressOpen = false;
+			$snackbarMessage = undefined;
+			$errorDialogMessage =
+				(e instanceof Error ? e.message + '. ' : '') + t.get('dashboard.errorGeneratingP12') + '.';
+		}
+	}
 </script>
 
-<!-- /* v8 ignore start */ -->
 <Paper variant="outlined" style="margin-bottom: 1rem;">
 	<Title>{$t('dashboard.certificate')}</Title>
 	<Content>
@@ -202,6 +246,30 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 						<path d={mdiUpload} />
 					</Icon>
 					<Label>{$t('dashboard.loadCrtFromFile')}</Label>
+				</Button>
+				<!-- "pointer-events: auto;" required for tooltip over disabled button to work. -->
+				<Button
+					data-testid="button-generate-and-download-p12"
+					on:click={async () => {
+						generatePKCS12();
+					}}
+					variant="outlined"
+					disabled={!ownerId || !password || !keyPair || !certificate}
+					title={!ownerId
+						? $t('dashboard.ownerIdFieldCannotBeEmpty')
+						: !password
+						? $t('dashboard.passwordFieldCannotBeEmpty')
+						: !keyPair
+						? $t('dashboard.keyMustBeAvailable')
+						: !certificate
+						? $t('dashboard.validCertificateMustBeAvailable')
+						: undefined}
+					style="pointer-events: auto;"
+				>
+					<Icon tag="svg" viewBox="0 0 24 24">
+						<path d={mdiFileMoveOutline} />
+					</Icon>
+					<Label>{$t('dashboard.downloadP12')}</Label>
 				</Button>
 			</Cell>
 		</LayoutGrid>

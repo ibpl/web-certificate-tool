@@ -16,9 +16,16 @@ import {
 	getAlgorithmParameters,
 	RSAPublicKey,
 	RSAPrivateKey,
-	AlgorithmIdentifier
+	AlgorithmIdentifier,
+	Certificate,
+	PFX,
+	AuthenticatedSafe,
+	SafeContents,
+	SafeBag,
+	CertBag,
+	Attribute
 } from 'pkijs';
-import { fromBER, Null, BitString } from 'asn1js';
+import { fromBER, Null, BitString, OctetString, BmpString } from 'asn1js';
 import { Convert } from 'pvtsutils';
 import FileSaver from 'file-saver';
 
@@ -439,6 +446,135 @@ export async function downloadPKCS8(kp: CryptoKeyPair, password: string, filenam
 // downloadPKCS10 downloads given CSR PEM content in file.
 export async function downloadPKCS10(csrPem: string, filename: string) {
 	downloadFile(filename, 'application/x-pem-file', new TextEncoder().encode(csrPem));
+}
+
+// downloadPKCS12 downloads given private key and certificate in encrypted PKCS #12 file.
+export async function downloadPKCS12(
+	keyPair: CryptoKeyPair,
+	certificate: Certificate,
+	ownerId: string,
+	password: string,
+	filename: string
+) {
+	if (!password) {
+		throw new Error('password cannot be empty');
+	}
+	if (!ownerId) {
+		throw new Error('ownerId cannot be empty');
+	}
+	if (!filename) {
+		throw new Error('filename cannot be empty');
+	}
+
+	const crypto = getCrypto(true);
+	const passwordConverted = Convert.FromUtf8String(password);
+	const certFingerprint = await crypto.digest('SHA-1', certificate.toSchema().toBER(false));
+	const privateKeyBinary = await crypto.subtle.exportKey('pkcs8', keyPair.privateKey);
+	const pkcs8Simpl = new PrivateKeyInfo({ schema: fromBER(privateKeyBinary).result });
+
+	// Put initial values for PKCS#12 structures.
+	const pkcs12 = new PFX({
+		parsedValue: {
+			integrityMode: 0, // Password-Based Integrity Mode.
+			authenticatedSafe: new AuthenticatedSafe({
+				parsedValue: {
+					safeContents: [
+						{
+							privacyMode: 1, // Password-Based Privacy Protection Mode.
+							value: new SafeContents({
+								safeBags: [
+									new SafeBag({
+										bagId: '1.2.840.113549.1.12.10.1.3',
+										bagValue: new CertBag({
+											parsedValue: certificate
+										}),
+										bagAttributes: [
+											new Attribute({
+												type: '1.2.840.113549.1.9.21', // localKeyID
+												values: [new OctetString({ valueHex: certFingerprint })]
+											}),
+											new Attribute({
+												type: '1.2.840.113549.1.9.20', // friendlyName
+												values: [new BmpString({ value: ownerId })]
+											})
+										]
+									})
+								]
+							})
+						},
+						{
+							privacyMode: 0, // No-privacy Protection Mode.
+							value: new SafeContents({
+								safeBags: [
+									new SafeBag({
+										bagId: '1.2.840.113549.1.12.10.1.2',
+										bagValue: new PKCS8ShroudedKeyBag({
+											parsedValue: pkcs8Simpl
+										}),
+										bagAttributes: [
+											new Attribute({
+												type: '1.2.840.113549.1.9.21', // localKeyID
+												values: [new OctetString({ valueHex: certFingerprint })]
+											}),
+											new Attribute({
+												type: '1.2.840.113549.1.9.20', // friendlyName
+												values: [new BmpString({ value: ownerId })]
+											})
+										]
+									})
+								]
+							})
+						}
+					]
+				}
+			})
+		}
+	});
+
+	// Encode internal values for PKCS8ShroudedKeyBag.
+	if (!(pkcs12.parsedValue && pkcs12.parsedValue.authenticatedSafe)) {
+		throw new Error('pkcs12.parsedValue.authenticatedSafe is empty');
+	}
+	await pkcs12.parsedValue.authenticatedSafe.parsedValue.safeContents[1].value.safeBags[0].bagValue.makeInternalValues(
+		{
+			password: passwordConverted,
+			contentEncryptionAlgorithm: {
+				name: 'AES-CBC', // OpenSSL can handle AES-CBC only.
+				length: 256
+			},
+			hmacHashAlgorithm: 'SHA-256',
+			iterationCount: PBKDF2_ITERATION_COUNT
+		}
+	);
+
+	// Encode internal values for all SafeContents first (create all Privacy Protection envelopes).
+	await pkcs12.parsedValue.authenticatedSafe.makeInternalValues({
+		safeContents: [
+			{
+				password: passwordConverted,
+				contentEncryptionAlgorithm: {
+					name: 'AES-CBC', // OpenSSL can handle AES-CBC only.
+					length: 256
+				},
+				hmacHashAlgorithm: 'SHA-256',
+				iterationCount: PBKDF2_ITERATION_COUNT
+			},
+			{
+				// Empty parameters for second SafeContent since No Privacy protection mode there.
+			}
+		]
+	});
+
+	// Encode internal values for Integrity Protection envelope.
+	await pkcs12.makeInternalValues({
+		password: passwordConverted,
+		iterations: PBKDF2_ITERATION_COUNT, // Big value here causes long generation time. See https://github.com/PeculiarVentures/PKI.js/issues/403
+		pbkdf2HashAlgorithm: 'SHA-256', // Least two parameters are equal because at the moment it is not clear how to use PBMAC1 schema with PKCS#12 integrity protection.
+		hmacHashAlgorithm: 'SHA-256'
+	});
+
+	// Download prepared PKCS #12 content to file.
+	downloadFile(filename, 'application/pkcs12', pkcs12.toSchema().toBER(false));
 }
 
 // readFile reads specified file content and returns it or rejects with error.
