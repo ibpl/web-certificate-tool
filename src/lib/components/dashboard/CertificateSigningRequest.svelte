@@ -79,7 +79,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 			// Download CSR in PEM formatted PKCS #10 file.
 			let keyIdentifierSha256 = await getKeyIdentifier(keyPair, 'SHA-256');
 
-			downloadPKCS10(
+			await downloadPKCS10(
 				csrPem,
 				ownerId.substring(0, 50) +
 					'_' +

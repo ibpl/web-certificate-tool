@@ -100,7 +100,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 
 			// Download new key in PEM formatted PKCS #8 file. Generate filename fron oid and first 10 key SHA256 chars.
 			let newPublicKeySha256 = await getKeyIdentifier(newKeyPair, 'SHA-256');
-			downloadPKCS8(
+			await downloadPKCS8(
 				newKeyPair,
 				password,
 				ownerId.substring(0, 50) +
@@ -135,7 +135,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 			// Download key in PEM formatted PKCS #8 file.
 			let keyIdentifierSha256 = await getKeyIdentifier(keyPair, 'SHA-256');
 
-			downloadPKCS8(
+			await downloadPKCS8(
 				keyPair,
 				password,
 				ownerId.substring(0, 50) +
