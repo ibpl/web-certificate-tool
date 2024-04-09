@@ -15,7 +15,8 @@
 		"format": "prettier --write .",
 		"prepare": "npm run smui-theme-light && npm run smui-theme-dark",
 		"smui-theme-light": "smui-theme compile static/smui.css -i src/theme",
-		"smui-theme-dark": "smui-theme compile static/smui-dark.css -i src/theme/dark"
+		"smui-theme-dark": "smui-theme compile static/smui-dark.css -i src/theme/dark",
+		"postinstall": "patch-package"
 	},
 	"devDependencies": {
 		"@material/typography": "^14.0.0",
@@ -49,6 +50,7 @@
 		"jsdom": "^24.0.0",
 		"moment": "^2.30.1",
 		"msw": "^2.2.13",
+		"patch-package": "^8.0.0",
 		"pkijs": "^3.0.16",
 		"prettier": "^2.8.8",
 		"prettier-plugin-svelte": "^2.10.1",

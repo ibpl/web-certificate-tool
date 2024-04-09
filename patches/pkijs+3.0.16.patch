@@ -1,0 +1,28 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://www.ib.pl>
+diff --git a/node_modules/pkijs/build/index.es.js b/node_modules/pkijs/build/index.es.js
+index 45806b3..2946818 100644
+--- a/node_modules/pkijs/build/index.es.js
++++ b/node_modules/pkijs/build/index.es.js
+@@ -6430,7 +6430,7 @@ class CryptoEngine extends AbstractCryptoEngine {
+         const ivBuffer = new ArrayBuffer(16);
+         const ivView = new Uint8Array(ivBuffer);
+         this.getRandomValues(ivView);
+-        const saltBuffer = new ArrayBuffer(64);
++        const saltBuffer = new ArrayBuffer(32);
+         const saltView = new Uint8Array(saltBuffer);
+         this.getRandomValues(saltView);
+         const contentView = new Uint8Array(parameters.contentToEncrypt);
+diff --git a/node_modules/pkijs/build/index.js b/node_modules/pkijs/build/index.js
+index c04dd82..6640c7b 100644
+--- a/node_modules/pkijs/build/index.js
++++ b/node_modules/pkijs/build/index.js
+@@ -6456,7 +6456,7 @@ class CryptoEngine extends AbstractCryptoEngine {
+         const ivBuffer = new ArrayBuffer(16);
+         const ivView = new Uint8Array(ivBuffer);
+         this.getRandomValues(ivView);
+-        const saltBuffer = new ArrayBuffer(64);
++        const saltBuffer = new ArrayBuffer(32);
+         const saltView = new Uint8Array(saltBuffer);
+         this.getRandomValues(saltView);
+         const contentView = new Uint8Array(parameters.contentToEncrypt);
