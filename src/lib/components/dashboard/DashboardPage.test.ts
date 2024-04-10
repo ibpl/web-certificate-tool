@@ -9,6 +9,7 @@ import { OWNER_ID_MAX_LENGTH } from '$lib/common';
 import FileSaver from 'file-saver';
 import { errorDialogMessage } from '$lib/stores';
 import { get } from 'svelte/store';
+import { testEncryptedRSA2048KeyPEM, testCrtPEM } from './Certificate.test';
 
 // For testing for copy to clipboard call.
 Object.assign(navigator, {
@@ -162,4 +163,57 @@ describe('DashboardPage', () => {
 		const inputCsr = <HTMLInputElement>screen.getByTestId('input-csr');
 		await vi.waitFor(() => expect(inputCsr.value).toBe(testCSRPEM + '\n'));
 	}, 20000);
+
+	test('PKCS #12 generation and downloading works', async () => {
+		const user = userEvent.setup();
+		render(DashboardPage);
+		const buttonGenerateAndDownloadP12 = screen.getByTestId('button-generate-and-download-p12');
+
+		// Check whether PKCS #12 downloading button is disabled when no owner's ID, password nor key pair is available.
+		expect(buttonGenerateAndDownloadP12.getAttribute('disabled')).toBe('');
+
+		// Type owner's ID and check whether PKCS #12 downloading button is still disabled.
+		await user.type(screen.getByTestId('input-ownerid'), 'test@example.com');
+		expect(buttonGenerateAndDownloadP12.getAttribute('disabled')).toBe('');
+
+		// Type password and check whether PKCS #12 downloading button is still disabled.
+		await user.type(screen.getByTestId('input-password'), '1234');
+		expect(buttonGenerateAndDownloadP12.getAttribute('disabled')).toBe('');
+
+		// Upload key and check whether PKCS #12 downloading button is still disabled.
+		const inputKey = <HTMLInputElement>screen.getByTestId('input-load-key');
+		const fileKey = new File([testEncryptedRSA2048KeyPEM], 'test.key', {
+			type: 'application/x-pem-file'
+		});
+		await user.upload(inputKey, fileKey);
+		expect(inputKey.files).toBeTruthy();
+		if (inputKey.files) {
+			expect(inputKey.files[0]).toStrictEqual(fileKey);
+			expect(inputKey.files.item(0)).toStrictEqual(fileKey);
+			expect(inputKey.files).toHaveLength(1);
+		}
+		expect(buttonGenerateAndDownloadP12.getAttribute('disabled')).toBe('');
+
+		// Upload valid certificate and check whether PKCS #12 downloading button is enabled.
+		const inputCrt = <HTMLInputElement>screen.getByTestId('input-load-crt');
+		const fileCrt = new File([testCrtPEM], 'test.crt', { type: 'application/x-pem-file' });
+		await user.upload(inputCrt, fileCrt);
+		expect(inputCrt.files).toBeTruthy();
+		if (inputCrt.files) {
+			expect(inputCrt.files[0]).toStrictEqual(fileCrt);
+			expect(inputCrt.files.item(0)).toStrictEqual(fileCrt);
+			expect(inputCrt.files).toHaveLength(1);
+		}
+		await vi.waitFor(() =>
+			expect(buttonGenerateAndDownloadP12.getAttribute('disabled')).toBe(null)
+		);
+
+		// Click PKCS #12 download key to generate and download PKCS #12.
+		// It's a long operation so wait up to 120s for completion. See https://github.com/PeculiarVentures/PKI.js/issues/403
+		const spy = vi.spyOn(FileSaver, 'saveAs');
+		global.URL.createObjectURL = vi.fn();
+		global.URL.revokeObjectURL = vi.fn();
+		await user.click(buttonGenerateAndDownloadP12);
+		await vi.waitFor(() => expect(spy).toHaveBeenCalledTimes(1), { timeout: 120000 });
+	}, 130000); // Long test as above.
 });

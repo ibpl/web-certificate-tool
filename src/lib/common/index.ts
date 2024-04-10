@@ -133,7 +133,7 @@ async function tsFetch<T>(url: string, options = {}): Promise<T> {
 		throw convertToAppError(
 			e,
 			'tsFetch',
-			/* v8 ignore next 1 */
+			/* v8 ignore next */
 			t.get(e instanceof Error && e.name === 'AbortError' ? 'common.timeout' : 'common.errorFetch')
 		);
 	}
@@ -170,7 +170,7 @@ async function tsFetch<T>(url: string, options = {}): Promise<T> {
 			message: t.get('common.badResponse'),
 			url: url,
 			operation: 'tsFetch',
-			/* v8 ignore next 1 */
+			/* v8 ignore next */
 			details: e instanceof Error ? e.message : (e as string)
 		};
 	}
@@ -460,6 +460,7 @@ export async function downloadPKCS12(
 	password: string,
 	filename: string
 ) {
+	/* v8 ignore next 9 */
 	if (!password) {
 		throw new Error('password cannot be empty');
 	}
@@ -536,6 +537,7 @@ export async function downloadPKCS12(
 	});
 
 	// Encode internal values for PKCS8ShroudedKeyBag.
+	/* v8 ignore next 3 */
 	if (!(pkcs12.parsedValue && pkcs12.parsedValue.authenticatedSafe)) {
 		throw new Error('pkcs12.parsedValue.authenticatedSafe is empty');
 	}

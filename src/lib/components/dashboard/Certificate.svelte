@@ -188,6 +188,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	}
 </script>
 
+<!-- /* v8 ignore start */ -->
 <Paper variant="outlined" style="margin-bottom: 1rem;">
 	<Title>{$t('dashboard.certificate')}</Title>
 	<Content>
@@ -195,14 +196,18 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 			{#if crtSerialNumber || crtInvalidBefore || crtInvalidAfter}
 				<Cell spanDevices={{ desktop: 12, tablet: 8, phone: 4 }}>
 					{#if crtInvalidBefore}
-						{$t('dashboard.invalidBefore')}: <strong>{crtInvalidBefore}</strong><br />
+						{$t('dashboard.invalidBefore')}:
+						<strong data-testid="strong-crt-invalid-before">{crtInvalidBefore}</strong><br />
 					{/if}
 					{#if crtInvalidAfter}
-						{$t('dashboard.invalidAfter')}: <strong>{crtInvalidAfter}</strong><br />
+						{$t('dashboard.invalidAfter')}:
+						<strong data-testid="strong-crt-invalid-after">{crtInvalidAfter}</strong><br />
 					{/if}
 					{#if crtSerialNumber}
 						{$t('dashboard.serialNumber')}:
-						<strong style="overflow-wrap: break-word;">{crtSerialNumber}</strong><br />
+						<strong style="overflow-wrap: break-word;" data-testid="strong-crt-serial-number"
+							>{crtSerialNumber}</strong
+						><br />
 					{/if}
 				</Cell>
 			{/if}

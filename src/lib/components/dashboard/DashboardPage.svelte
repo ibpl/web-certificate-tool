@@ -29,7 +29,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	<CertificateSigningRequest bind:ownerId bind:keyPair />
 	<Certificate bind:ownerId bind:keyPair bind:password />
 
-	<!-- /* v8 ignore next 1 */ -->
+	<!-- /* v8 ignore next */ -->
 	{#if keyPair}
 		<Hint icon={mdiAlertOutline}
 			><div slot="content">
