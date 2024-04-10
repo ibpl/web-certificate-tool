@@ -18,7 +18,8 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 		fromPEM,
 		bufferToHex,
 		downloadPKCS12,
-		getKeyIdentifier
+		getKeyIdentifier,
+		CERTIFICATE_PEM_REGEXP
 	} from '$lib/common';
 	import { getCrypto, Certificate, PublicKeyInfo } from 'pkijs';
 	import { fromBER } from 'asn1js';
@@ -66,6 +67,9 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 
 		if (crtPem != '') {
 			try {
+				if (!CERTIFICATE_PEM_REGEXP.test(crtPem)) {
+					throw new Error();
+				}
 				certificate = Certificate.fromBER(fromPEM(crtPem));
 				crtInvalidBefore =
 					moment(certificate.notBefore.value).utc().format('YYYY-MM-DD HH:mm:ss') + ' UTC';
@@ -221,7 +225,9 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 						<HelperText persistent={!certificate} validationMsg={false}
 							>{$t('dashboard.pasteOrLoadCrt')}</HelperText
 						>
-						<HelperText validationMsg={true}>{crtErrorMessage}</HelperText>
+						<HelperText validationMsg={true} data-testid="input-crt-validation-msg"
+							>{crtErrorMessage}</HelperText
+						>
 					</svelte:fragment>
 				</Textfield>
 			</Cell>

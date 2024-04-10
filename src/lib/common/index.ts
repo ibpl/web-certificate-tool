@@ -43,6 +43,10 @@ export const UNENCRYPTED_PRIVKEY_PEM_REGEXP = new RegExp(
 	'^\\n*-{5}BEGIN PRIVATE KEY-{5}\\n([A-Za-z0-9+/=]+\\n)+-{5}END PRIVATE KEY-{5}\\n*$',
 	''
 );
+export const CERTIFICATE_PEM_REGEXP = new RegExp(
+	'^\\n*-{5}BEGIN CERTIFICATE-{5}\\n([A-Za-z0-9+/=]+\\n)+-{5}END CERTIFICATE-{5}\\n*$',
+	''
+);
 
 // Settings defines application settings.
 export type Settings = {
