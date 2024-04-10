@@ -474,7 +474,7 @@ export async function downloadPKCS12(
 	const crypto = getCrypto(true);
 	const passwordConverted = Convert.FromUtf8String(password);
 	const certFingerprint = await crypto.digest('SHA-1', certificate.toSchema().toBER(false));
-	const privateKeyBinary = await crypto.subtle.exportKey('pkcs8', keyPair.privateKey);
+	const privateKeyBinary = await crypto.exportKey('pkcs8', keyPair.privateKey);
 	const pkcs8Simpl = new PrivateKeyInfo({ schema: fromBER(privateKeyBinary).result });
 
 	// Put initial values for PKCS#12 structures.
