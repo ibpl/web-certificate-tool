@@ -1,10 +1,8 @@
 {
-	"bePatientFewMinutes": " ",
 	"certificate": "Certyfikat",
 	"crtDoesNotMatchKey": "Certyfikat nie pasuje do klucza",
 	"crtDoesNotMatchOwnerId": "Certyfikat nie pasuje do ID właściciela",
 	"certificateSignignRequest": "Żądanie podpisania certyfikatu (CSR)",
-	"copyCrtToClipboard": "Skopiuj certyfikat do schowka",
 	"copyCsrToClipboard": "Skopiuj CSR do schowka",
 	"copyToClipboardFailure": "Kopiowanie do schowka nie powiodło się!",
 	"copyToClipboardSuccess": "Skopiowane do schowka.",
@@ -13,7 +11,6 @@
 	"downloadCsr": "Pobierz CSR",
 	"downloadKey": "Pobierz klucz",
 	"downloadP12": "Pobierz plik PKCS #12 z kluczem i certyfikatem",
-	"errorDownloadingCrt": "Certyfikat nie został pobrany",
 	"errorDownloadingCsr": "CSR nie został pobrany",
 	"errorDownloadingKey": "Klucz nie został pobrany",
 	"errorGeneratingCsr": "CSR nie został wygenerowany",
