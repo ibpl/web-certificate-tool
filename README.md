@@ -5,7 +5,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 
 # Web Certificate Tool
 
-A client-side rendered web application that facilitates the creation of client keys and certificates for TLS. It is built on top of [Web Crypto](https://en.wikipedia.org/wiki/Web_Cryptography_API), [PKIjs](https://pkijs.org/), [SvelteKit](https://kit.svelte.dev/) and [SMUI](https://sveltematerialui.com/).
+A client-side rendered web application that facilitates the creation of client keys and certificates for TLS. It is built on top of [PKIjs](https://pkijs.org/), [SvelteKit](https://kit.svelte.dev/) and [SMUI](https://sveltematerialui.com/).
 
 ## Downloading
 
@@ -169,6 +169,26 @@ Application allows to save private RSA key in PKCS #8 PEM formatted file without
 #### Loading
 
 Application allows to load private RSA key from PKCS #8 PEM formatted file without encryption or (if password is specified) encrypted with alghorithm supported by [PKIjs](https://pkijs.org/) (i.e. PBKDF2/SHA-256/AES-256-CBC as saved by this application or generated with openssl 3.0). Keys are loaded locally in browser using [PKIjs](https://pkijs.org/)
+
+### Certificate signing requests (CSR)
+
+#### Generation
+
+Application allows to generate PKCS #10 PEM formatted CSR from given key and owner's ID (which is stored in subject CN).
+
+#### Saving
+
+Application allows to copy generated CSR to clipboard or save it to file or pass it to default e-mail client (to be sent in e-mail message body).
+
+### Certificates
+
+#### Loading
+
+Application allows to load certificate from PEM formatted file. Certificates are loaded locally in browser using [PKIjs](https://pkijs.org/)
+
+#### Saving
+
+Application allows to save private RSA key and its certificate in PKCS #12 formatted file encrypted with PBKDF2/SHA-256/AES-256-CBC (similar as openssl 3.0 does).
 
 ## Licenses
 
