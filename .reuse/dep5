@@ -4,7 +4,7 @@ Files: .vscode/*.json src/lib/i18n/*.json src/*.html static/* .prettierrc packag
 Copyright: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://www.ib.pl>
 License: AGPL-3.0-only
 
-Files: static/certificate.svg
+Files: static/icon.svg
 Copyright: Pictogrammers <https://pictogrammers.com/>
 	2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://www.ib.pl>
 License: Apache-2.0 AND AGPL-3.0-only
