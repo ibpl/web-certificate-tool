@@ -186,10 +186,10 @@ const initializeEnvironmentInternalPaths = new Map();
 // initializeEnvironmentInternal initializes application environemnt for given URL.
 async function initializeEnvironmentInternal(url: URL) {
 	try {
-		// Load translations based on browser locale for t.get()
+		// Load translations based on browser's primary language subtag for t.get()
 		// work properly for error messages that may be generated
 		// during other initializations below.
-		await loadTranslations(window.navigator.language, url.pathname);
+		await loadTranslations(window.navigator.language.split('-')[0].toLowerCase(), url.pathname);
 		/* v8 ignore next 4 */
 	} catch (e) {
 		// Throw error to generate +error.svelte error page.
@@ -297,9 +297,11 @@ async function initializeEnvironmentInternal(url: URL) {
 	}
 
 	// Load translations based on locale from application settings if not empty;
-	// otherwise use browser's locale.
+	// otherwise use browser's primary language subtag.
 	await loadTranslations(
-		applicationSettings.locale ? applicationSettings.locale : window.navigator.language,
+		applicationSettings.locale
+			? applicationSettings.locale
+			: window.navigator.language.split('-')[0].toLowerCase(),
 		url.pathname
 	);
 }
