@@ -54,7 +54,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	...to avoid FOUC on page load. -->
 <svelte:head>
 	{#if $settings.themeMode == ''}
-		<link rel="stylesheet" href="/smui.css" media="(prefers-color-scheme: light)" />
+		<link rel="stylesheet" href="/smui.css" />
 		<link rel="stylesheet" href="/smui-dark.css" media="screen and (prefers-color-scheme: dark)" />
 	{:else if $settings.themeMode == 'dark'}
 		<link rel="stylesheet" href="/smui.css" />
