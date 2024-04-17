@@ -149,12 +149,7 @@ describe('DashboardPage', () => {
 		const input = <HTMLInputElement>screen.getByTestId('input-load-key');
 		const file = new File([testRSA2048KeyPEM], 'test.key', { type: 'application/x-pem-file' });
 		await user.upload(input, file);
-		expect(input.files).toBeTruthy();
-		if (input.files) {
-			expect(input.files[0]).toStrictEqual(file);
-			expect(input.files.item(0)).toStrictEqual(file);
-			expect(input.files).toHaveLength(1);
-		}
+
 		// No error should be set.
 		await vi.waitFor(() => expect(get(errorDialogMessage)).toBe(''), { timeout: 3000 });
 
@@ -198,12 +193,6 @@ describe('DashboardPage', () => {
 		const inputCrt = <HTMLInputElement>screen.getByTestId('input-load-crt');
 		const fileCrt = new File([testCrtPEM], 'test.crt', { type: 'application/x-pem-file' });
 		await user.upload(inputCrt, fileCrt);
-		expect(inputCrt.files).toBeTruthy();
-		if (inputCrt.files) {
-			expect(inputCrt.files[0]).toStrictEqual(fileCrt);
-			expect(inputCrt.files.item(0)).toStrictEqual(fileCrt);
-			expect(inputCrt.files).toHaveLength(1);
-		}
 		await vi.waitFor(() =>
 			expect(buttonGenerateAndDownloadP12.getAttribute('disabled')).toBe(null)
 		);

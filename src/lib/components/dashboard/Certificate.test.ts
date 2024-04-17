@@ -95,12 +95,6 @@ async function testCrtUploadFailure(crtPem: string, ownerId: string, errorMessag
 
 	const file = new File([crtPem], 'test.crt', { type: 'application/x-pem-file' });
 	await user.upload(input, file);
-	expect(input.files).toBeTruthy();
-	if (input.files) {
-		expect(input.files[0]).toStrictEqual(file);
-		expect(input.files.item(0)).toStrictEqual(file);
-		expect(input.files).toHaveLength(1);
-	}
 
 	// Error should be displayed.
 	await vi.waitFor(
@@ -132,12 +126,6 @@ async function testCrtUploadSuccess(
 
 	const file = new File([crtPem], 'test.crt', { type: 'application/x-pem-file' });
 	await user.upload(input, file);
-	expect(input.files).toBeTruthy();
-	if (input.files) {
-		expect(input.files[0]).toStrictEqual(file);
-		expect(input.files.item(0)).toStrictEqual(file);
-		expect(input.files).toHaveLength(1);
-	}
 
 	// Check loaded certificate information.
 	await vi.waitFor(

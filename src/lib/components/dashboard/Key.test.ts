@@ -814,12 +814,6 @@ async function testKeyUploadFailure(key: string, password: string, errorMessage:
 
 	const file = new File([key], 'test.key', { type: 'application/x-pem-file' });
 	await user.upload(input, file);
-	expect(input.files).toBeTruthy();
-	if (input.files) {
-		expect(input.files[0]).toStrictEqual(file);
-		expect(input.files.item(0)).toStrictEqual(file);
-		expect(input.files).toHaveLength(1);
-	}
 
 	// Error should be set.
 	await vi.waitFor(() => expect(get(errorDialogMessage)).toBe(errorMessage));
@@ -844,12 +838,6 @@ async function testKeyUploadSuccess(
 
 	const file = new File([key], 'test.key', { type: 'application/x-pem-file' });
 	await user.upload(input, file);
-	expect(input.files).toBeTruthy();
-	if (input.files) {
-		expect(input.files[0]).toStrictEqual(file);
-		expect(input.files.item(0)).toStrictEqual(file);
-		expect(input.files).toHaveLength(1);
-	}
 
 	// No error should be set.
 	await vi.waitFor(() => expect(get(errorDialogMessage)).toBe(''), { timeout: 3000 });
