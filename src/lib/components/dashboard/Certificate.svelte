@@ -148,6 +148,9 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 				t.get('dashboard.errorLoadingCrtFromFile') +
 				'.';
 		}
+		// Reset file input value to workaround problems with uploading same file again in some browsers.
+		// See https://stackoverflow.com/questions/4109276/how-to-detect-input-type-file-change-for-the-same-file
+		crtFileInput.value = '';
 	}
 
 	// generatePKCS12 generates PKCS #12 archive with private key and certificate and download it.

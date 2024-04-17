@@ -175,6 +175,9 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 				t.get('dashboard.errorLoadingKeyFromFile') +
 				'.';
 		}
+		// Reset file input value to workaround problems with uploading same file again in some browsers.
+		// See https://stackoverflow.com/questions/4109276/how-to-detect-input-type-file-change-for-the-same-file
+		keyFileInput.value = '';
 	}
 </script>
 
