@@ -585,13 +585,16 @@ export async function downloadPKCS12(
 	downloadFile(filename, 'application/pkcs12', pkcs12.toSchema().toBER(false));
 }
 
-// readFile reads specified file content and returns it or rejects with error.
+// readFile reads specified file content (with mac and wiondows newlines
+// converted to \n) and returns it or rejects with error.
 export function readFileAsText(file: File) {
 	return new Promise<string>((resolve, reject) => {
 		const fileReader = new FileReader();
 		fileReader.onload = () => {
-			/* v8 ignore next */
-			resolve(typeof fileReader.result == 'string' ? fileReader.result : '');
+			/* v8 ignore next 3*/
+			resolve(
+				typeof fileReader.result == 'string' ? fileReader.result.replace(/(?:\r\n|\r)/g, '\n') : ''
+			);
 		};
 		/* v8 ignore next */
 		fileReader.onerror = (error) => reject(error);

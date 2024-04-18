@@ -199,6 +199,12 @@ p4KANr54jduC3zHHsdvbgffKOOg6Ny5ryXQ0jSb3rMQblVh/3wR0FcjTyTyBbqXG
 v9L9iuxoXA5IjjauCYIPNbDxrg==
 -----END PRIVATE KEY-----`;
 
+const testRSA2048KeyPEMMacNewlines =
+	'\r-----BEGIN PRIVATE KEY-----\rMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDWd36XkqIpXeqr\rC8aXgfOPKhQuJgySAq6i42AUup+GD+hPp+TGBtGYfHZlwhVEvSChZoyCXuPUAcam\rGwdN04XBU882JzqQrLJg5QYC0C3gIRSpYPxHlqoI5f6Lm3IsqKx0qrPB62Cs9Lxy\rEHBwiZ46LathqMlk2SLED8VR216Blx6jBpw5KZB19XGIqzw5flWibfBXqVYIiiUC\rdriPh17V6YVey++poY7sApcVIzKyhKhGmqgCa013PrHQ60bOLtiFDyTWCsCVHqYk\rOsz5Bo3h0G9Q+fZ5Q0/IuSdJ0hGqKnvFxd/W23jnabxAD815phAU3dFlWpRm7Kgm\rWw8P3CSrAgMBAAECggEBAImI4Bn74xp8K/2884I9yB/LcF2X8P/B0JSNFBS3CY5D\rrUtH9CI6RTdwuczQBiuqzb4zsW/5wkk3SllDhA+Y0nIEeSHVTm1xEoOo2436SzEs\rhb+Jfr+6ExjZxb9p1HJnSREYV2bIt5qy6BaODE1fM6VDnGBoiZ6u0OjC5Ft2PskD\rH5RD4R7vqi4hL5Gv8zVeVGH4NQOy1DwVOQL/PPejlZdiAAiuwf+noDzQgzTpPh3h\rt7LHRe0cMB/uGPB4XQyLxQrkWS8QvI8VP/v7zGg9Km8VIntJlUMqZyJazPUFa2yt\rN59SvO35NriUWsobMfyJxPutbWJdKVMMJgPKk56QSuECgYEA9+oAwLlGmLP7NefT\r+DpEwb1Z/zxgEbd70fJzov05YsTnXdIBhiw0PqlRpuIq2ulabmBg5nLmj/GmlBrK\rCgzTDbtoX2zZPPSvEKE3KV0ttv/eYhVzzpS11YNkoA+mBXjjzoeqIFLtdsMEf+FH\rYtKHos3BO1QT+PWHw/WiDdkV52cCgYEA3XY32GmWjaNzzW7+XZJnGsznjjX3bRwa\rQaowvnM8e7gtW08CVkzbte6H6HFElgTDFKrB81Xb1i2fwuN28XA+U1XvWmeZF0Dq\rSlbRZY0396CT32Ak0MKQ3+pwIzxNOsoWbsrlzZgEfiXKNP9C2UUsmQ1mvvPmnLVp\rUbwDGfYo4h0CgYEAy7sYjUh01I6rtbvi/Q3dbR1PdSnHhSe08G5/SwUwAJPx0q7/\rI6T19jys5ijcsPOtpiE74IWyJb6fdvyg5itt0c4d0rWfvLEToOXrb+mr5MRWm2In\rvi+FUoZczhCuDbcv9oyUaWXc0YkoDHM0d+itIERYNIo+s4wK2yXj2993WacCgYEA\rirqplRnfw+5mdoRXN4qkp/c//qfzzRfTotrYGhXaB66CSzadQi53W+qGnKeHzWpC\rQkoNoT9hrTN7ZvxS4D/t6wpkG//VuOljWxozpifmrWqb90wlA9k+I+aaRJhb0L4T\re2gCuN3HwrYtizF0UOKyY1YvzOLAzd4ekaLzVmoLhkkCgYBBaOL0titx6cSGfZcw\rp4KANr54jduC3zHHsdvbgffKOOg6Ny5ryXQ0jSb3rMQblVh/3wR0FcjTyTyBbqXG\r3W6VM3Krmh7HWtvv1IvwUX2YYPP97W+1ph09aNGe0KXrYTqM+jiaBNQGoA36cFcl\rv9L9iuxoXA5IjjauCYIPNbDxrg==\r-----END PRIVATE KEY-----';
+
+const testRSA2048KeyPEMWinNewlines =
+	'-----BEGIN PRIVATE KEY-----\r\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDWd36XkqIpXeqr\r\nC8aXgfOPKhQuJgySAq6i42AUup+GD+hPp+TGBtGYfHZlwhVEvSChZoyCXuPUAcam\r\nGwdN04XBU882JzqQrLJg5QYC0C3gIRSpYPxHlqoI5f6Lm3IsqKx0qrPB62Cs9Lxy\r\nEHBwiZ46LathqMlk2SLED8VR216Blx6jBpw5KZB19XGIqzw5flWibfBXqVYIiiUC\r\ndriPh17V6YVey++poY7sApcVIzKyhKhGmqgCa013PrHQ60bOLtiFDyTWCsCVHqYk\r\nOsz5Bo3h0G9Q+fZ5Q0/IuSdJ0hGqKnvFxd/W23jnabxAD815phAU3dFlWpRm7Kgm\r\nWw8P3CSrAgMBAAECggEBAImI4Bn74xp8K/2884I9yB/LcF2X8P/B0JSNFBS3CY5D\r\nrUtH9CI6RTdwuczQBiuqzb4zsW/5wkk3SllDhA+Y0nIEeSHVTm1xEoOo2436SzEs\r\nhb+Jfr+6ExjZxb9p1HJnSREYV2bIt5qy6BaODE1fM6VDnGBoiZ6u0OjC5Ft2PskD\r\nH5RD4R7vqi4hL5Gv8zVeVGH4NQOy1DwVOQL/PPejlZdiAAiuwf+noDzQgzTpPh3h\r\nt7LHRe0cMB/uGPB4XQyLxQrkWS8QvI8VP/v7zGg9Km8VIntJlUMqZyJazPUFa2yt\r\nN59SvO35NriUWsobMfyJxPutbWJdKVMMJgPKk56QSuECgYEA9+oAwLlGmLP7NefT\r\n+DpEwb1Z/zxgEbd70fJzov05YsTnXdIBhiw0PqlRpuIq2ulabmBg5nLmj/GmlBrK\r\nCgzTDbtoX2zZPPSvEKE3KV0ttv/eYhVzzpS11YNkoA+mBXjjzoeqIFLtdsMEf+FH\r\nYtKHos3BO1QT+PWHw/WiDdkV52cCgYEA3XY32GmWjaNzzW7+XZJnGsznjjX3bRwa\r\nQaowvnM8e7gtW08CVkzbte6H6HFElgTDFKrB81Xb1i2fwuN28XA+U1XvWmeZF0Dq\r\nSlbRZY0396CT32Ak0MKQ3+pwIzxNOsoWbsrlzZgEfiXKNP9C2UUsmQ1mvvPmnLVp\r\nUbwDGfYo4h0CgYEAy7sYjUh01I6rtbvi/Q3dbR1PdSnHhSe08G5/SwUwAJPx0q7/\r\nI6T19jys5ijcsPOtpiE74IWyJb6fdvyg5itt0c4d0rWfvLEToOXrb+mr5MRWm2In\r\nvi+FUoZczhCuDbcv9oyUaWXc0YkoDHM0d+itIERYNIo+s4wK2yXj2993WacCgYEA\r\nirqplRnfw+5mdoRXN4qkp/c//qfzzRfTotrYGhXaB66CSzadQi53W+qGnKeHzWpC\r\nQkoNoT9hrTN7ZvxS4D/t6wpkG//VuOljWxozpifmrWqb90wlA9k+I+aaRJhb0L4T\r\ne2gCuN3HwrYtizF0UOKyY1YvzOLAzd4ekaLzVmoLhkkCgYBBaOL0titx6cSGfZcw\r\np4KANr54jduC3zHHsdvbgffKOOg6Ny5ryXQ0jSb3rMQblVh/3wR0FcjTyTyBbqXG\r\n3W6VM3Krmh7HWtvv1IvwUX2YYPP97W+1ph09aNGe0KXrYTqM+jiaBNQGoA36cFcl\r\nv9L9iuxoXA5IjjauCYIPNbDxrg==\r\n-----END PRIVATE KEY-----\r\n\r\n';
+
 const testEncryptedRSA2048KeyPEM = `
 -----BEGIN ENCRYPTED PRIVATE KEY-----
 MIIFLTBXBgkqhkiG9w0BBQ0wSjApBgkqhkiG9w0BBQwwHAQIGZRfPvef62ECAggA
@@ -1032,6 +1038,26 @@ describe('Key', () => {
 	test('uploading RSA 2048 key succeeds', async () => {
 		await testKeyUploadSuccess(
 			testRSA2048KeyPEM,
+			'',
+			'RSA-2048',
+			'c9:d8:aa:ed:2e:f3:f8:85:16:a2:2c:3a:7e:b7:20:32:cb:74:bd:b5',
+			'd0:24:7c:bf:54:db:fb:56:87:24:ed:0f:0f:f4:2b:2e:3f:a7:ae:4c:d4:86:b8:6f:9f:3f:22:c4:a4:81:10:0c'
+		);
+	}, 20000);
+
+	test('uploading key with mac newlines succeeds', async () => {
+		await testKeyUploadSuccess(
+			testRSA2048KeyPEMMacNewlines,
+			'',
+			'RSA-2048',
+			'c9:d8:aa:ed:2e:f3:f8:85:16:a2:2c:3a:7e:b7:20:32:cb:74:bd:b5',
+			'd0:24:7c:bf:54:db:fb:56:87:24:ed:0f:0f:f4:2b:2e:3f:a7:ae:4c:d4:86:b8:6f:9f:3f:22:c4:a4:81:10:0c'
+		);
+	}, 20000);
+
+	test('uploading key with windows newlines succeeds', async () => {
+		await testKeyUploadSuccess(
+			testRSA2048KeyPEMWinNewlines,
 			'',
 			'RSA-2048',
 			'c9:d8:aa:ed:2e:f3:f8:85:16:a2:2c:3a:7e:b7:20:32:cb:74:bd:b5',

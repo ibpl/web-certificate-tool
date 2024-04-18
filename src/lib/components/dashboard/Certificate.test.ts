@@ -87,6 +87,12 @@ X9UUgSxEgAhQUpoEV88Q++OQvmn/vQ1pH81M/8jU3epxG8E=
 -----END CERTIFICATE-----
 `;
 
+export const testCrtPEMMacNewlines =
+	'-----BEGIN CERTIFICATE-----\rMIICvzCCAacCFCd3a1t5SkNPj5CsYg4AhhRq9HNxMA0GCSqGSIb3DQEBCwUAMBsx\rGTAXBgNVBAMMEHRlc3RAZXhhbXBsZS5jb20wIBcNMjQwNDEwMDgyOTMxWhgPMjEy\rNDA2MjUwODI5MzFaMBsxGTAXBgNVBAMMEHRlc3RAZXhhbXBsZS5jb20wggEiMA0G\rCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCqD9RE2fvpfN9wWdFvkusYF4xw6jAm\rPG3T4Y2gzN68DmcfLCzJYVBY7YfyGj7U5Y1WeiYkLt3dXMmRLKmDWjfCIesELtxw\rNN7CAS0ats9ARlfApdV7PrfI7dUYVASFKKrNan+Lnvf1SjUMFebfWc9QLVFkmzDr\rJVyGpF0zbcMPRPeysfUMA/b5dxmW/vwa/jSVvz8I6X84PEYF4VFM8ve5NdcPXUCP\rfeJFWHvwze0t5V+a60MUULUZV+y5LRk5Qna/xPBTyLZCRbRmrfNfKuNpyGU8AQXU\rZLAAfGlZxyKcHQ9s47t+YpJQ74MiWQYYBibEcybEuF26omZmix7CTaDbAgMBAAEw\rDQYJKoZIhvcNAQELBQADggEBABZAJdtCY099RYeQK2BTr7nVyvVveRdc7jBzayul\rR+BSQW/IE6e4VgOtBMYFOnTI02HhJS0dhpNdSGm8N8byh5R6aYHAlrYK/mVjjTFA\rJ+xs2aToNkS8H96SblusYvMNqqpdn0GbvgXMSPEQDDPkPBWspWn0KeUCHzRm7iVd\rAd6nTElVQ0JFkujp3DAa6rpPejjpZOGIPzajh8HKVxmKRifRmDyDZHa8p5lGmAIK\rg1ukcUIGduPY+BIGe4/XrmFj1gjftxRz4piwx6WGbO0k1U+z/Alrlw2a/90bQqlg\rX9UUgSxEgAhQUpoEV88Q++OQvmn/vQ1pH81M/8jU3epxG8E=\r-----END CERTIFICATE-----\r\r';
+
+export const testCrtPEMWinNewlines =
+	'\r\n-----BEGIN CERTIFICATE-----\r\nMIICvzCCAacCFCd3a1t5SkNPj5CsYg4AhhRq9HNxMA0GCSqGSIb3DQEBCwUAMBsx\r\nGTAXBgNVBAMMEHRlc3RAZXhhbXBsZS5jb20wIBcNMjQwNDEwMDgyOTMxWhgPMjEy\r\nNDA2MjUwODI5MzFaMBsxGTAXBgNVBAMMEHRlc3RAZXhhbXBsZS5jb20wggEiMA0G\r\nCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCqD9RE2fvpfN9wWdFvkusYF4xw6jAm\r\nPG3T4Y2gzN68DmcfLCzJYVBY7YfyGj7U5Y1WeiYkLt3dXMmRLKmDWjfCIesELtxw\r\nNN7CAS0ats9ARlfApdV7PrfI7dUYVASFKKrNan+Lnvf1SjUMFebfWc9QLVFkmzDr\r\nJVyGpF0zbcMPRPeysfUMA/b5dxmW/vwa/jSVvz8I6X84PEYF4VFM8ve5NdcPXUCP\r\nfeJFWHvwze0t5V+a60MUULUZV+y5LRk5Qna/xPBTyLZCRbRmrfNfKuNpyGU8AQXU\r\nZLAAfGlZxyKcHQ9s47t+YpJQ74MiWQYYBibEcybEuF26omZmix7CTaDbAgMBAAEw\r\nDQYJKoZIhvcNAQELBQADggEBABZAJdtCY099RYeQK2BTr7nVyvVveRdc7jBzayul\r\nR+BSQW/IE6e4VgOtBMYFOnTI02HhJS0dhpNdSGm8N8byh5R6aYHAlrYK/mVjjTFA\r\nJ+xs2aToNkS8H96SblusYvMNqqpdn0GbvgXMSPEQDDPkPBWspWn0KeUCHzRm7iVd\r\nAd6nTElVQ0JFkujp3DAa6rpPejjpZOGIPzajh8HKVxmKRifRmDyDZHa8p5lGmAIK\r\ng1ukcUIGduPY+BIGe4/XrmFj1gjftxRz4piwx6WGbO0k1U+z/Alrlw2a/90bQqlg\r\nX9UUgSxEgAhQUpoEV88Q++OQvmn/vQ1pH81M/8jU3epxG8E=\r\n-----END CERTIFICATE-----\r\n';
+
 // testCrtUploadFailure tests certificate upload failure.
 async function testCrtUploadFailure(crtPem: string, ownerId: string, errorMessage: string) {
 	const user = userEvent.setup();
@@ -176,6 +182,26 @@ describe('Certificate', () => {
 	test('uploading valid certificate succeeds', async () => {
 		await testCrtUploadSuccess(
 			testCrtPEM,
+			'test@example.com',
+			'2024-04-10 08:29:31 UTC',
+			'2124-06-25 08:29:31 UTC',
+			'27:77:6b:5b:79:4a:43:4f:8f:90:ac:62:0e:00:86:14:6a:f4:73:71'
+		);
+	}, 20000);
+
+	test('uploading valid certificate with mac newlines succeeds', async () => {
+		await testCrtUploadSuccess(
+			testCrtPEMMacNewlines,
+			'test@example.com',
+			'2024-04-10 08:29:31 UTC',
+			'2124-06-25 08:29:31 UTC',
+			'27:77:6b:5b:79:4a:43:4f:8f:90:ac:62:0e:00:86:14:6a:f4:73:71'
+		);
+	}, 20000);
+
+	test('uploading valid certificate with windows newlines succeeds', async () => {
+		await testCrtUploadSuccess(
+			testCrtPEMWinNewlines,
 			'test@example.com',
 			'2024-04-10 08:29:31 UTC',
 			'2124-06-25 08:29:31 UTC',
