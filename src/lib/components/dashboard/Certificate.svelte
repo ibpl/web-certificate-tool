@@ -247,7 +247,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 					data-testid="input-load-crt"
 					bind:this={crtFileInput}
 					type="file"
-					accept=".crt"
+					accept=".crt,.pem"
 					on:change={loadCrt}
 					style="display: none;"
 				/>

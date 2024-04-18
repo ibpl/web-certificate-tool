@@ -271,7 +271,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 					data-testid="input-load-key"
 					bind:this={keyFileInput}
 					type="file"
-					accept=".key"
+					accept=".key,.pem"
 					on:change={loadKey}
 					style="display: none;"
 				/>
