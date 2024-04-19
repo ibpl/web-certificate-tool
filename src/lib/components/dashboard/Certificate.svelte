@@ -19,7 +19,8 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 		bufferToHex,
 		downloadPKCS12,
 		getKeyIdentifier,
-		CERTIFICATE_PEM_REGEXP
+		CERTIFICATE_PEM_REGEXP,
+		PRINTABLE_ASCII_CHARACTERS_REGEXP
 	} from '$lib/common';
 	import { getCrypto, Certificate, PublicKeyInfo } from 'pkijs';
 	import { fromBER } from 'asn1js';
@@ -270,11 +271,17 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 						generatePKCS12();
 					}}
 					variant="outlined"
-					disabled={!ownerId || !password || !keyPair || !certificate}
+					disabled={!ownerId ||
+						!password ||
+						!PRINTABLE_ASCII_CHARACTERS_REGEXP.test(password) ||
+						!keyPair ||
+						!certificate}
 					title={!ownerId
 						? $t('dashboard.ownerIdFieldCannotBeEmpty')
 						: !password
 						? $t('dashboard.passwordFieldCannotBeEmpty')
+						: !PRINTABLE_ASCII_CHARACTERS_REGEXP.test(password)
+						? $t('dashboard.passwordMayContainASCIIPrintableCharactersOnly')
 						: !keyPair
 						? $t('dashboard.keyMustBeAvailable')
 						: !certificate
