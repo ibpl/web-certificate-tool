@@ -168,7 +168,7 @@ Application allows to save private RSA key in PKCS #8 PEM formatted file without
 
 #### Loading
 
-Application allows to load private RSA key from PKCS #8 PEM formatted file without encryption or (if password is specified) encrypted with alghorithm supported by [PKIjs](https://pkijs.org/) (i.e. PBKDF2/SHA-256/AES-256-CBC as saved by this application or generated with openssl 3.0). Keys are loaded locally in browser using [PKIjs](https://pkijs.org/)
+Application allows to load private RSA key from PKCS #8 PEM formatted file without encryption or (if password is specified) encrypted with alghorithm supported by [PKIjs](https://pkijs.org/) (i.e. PBKDF2/SHA-256/AES-256-CBC as saved by this application or generated with openssl 3.0). Keys are loaded locally in browser using [PKIjs](https://pkijs.org/).
 
 ### Certificate signing requests (CSR)
 
@@ -184,7 +184,7 @@ Application allows to copy generated CSR to clipboard or save it to file or pass
 
 #### Loading
 
-Application allows to load certificate from PEM formatted file. Certificates are loaded locally in browser using [PKIjs](https://pkijs.org/)
+Application allows to load certificate from PEM formatted file. Certificates are loaded locally in browser using [PKIjs](https://pkijs.org/).
 
 #### Saving
 
