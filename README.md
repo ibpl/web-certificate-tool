@@ -12,7 +12,7 @@ A client-side rendered web application that facilitates the creation of client k
 To download source code with `git` use
 
 ```
-git clone https://github.com/ibpl/web-certrificate-tool
+git clone https://github.com/ibpl/web-certificate-tool
 ```
 
 ## Building
