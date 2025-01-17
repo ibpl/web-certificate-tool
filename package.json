@@ -16,7 +16,7 @@
 		"prepare": "npm run smui-theme-light && npm run smui-theme-dark",
 		"smui-theme-light": "smui-theme compile static/smui.css -i src/theme",
 		"smui-theme-dark": "smui-theme compile static/smui-dark.css -i src/theme/dark",
-		"postinstall": "patch-package"
+		"postinstall": "patch-package --error-on-fail"
 	},
 	"devDependencies": {
 		"@material/typography": "^14.0.0",

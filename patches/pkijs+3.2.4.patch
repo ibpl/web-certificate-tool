@@ -1,0 +1,46 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2025 Informatyka Boguslawski sp. z o.o. sp.k. <https://www.ib.pl>
+diff --git a/node_modules/pkijs/build/index.es.js b/node_modules/pkijs/build/index.es.js
+index 766e2f9..d871090 100644
+--- a/node_modules/pkijs/build/index.es.js
++++ b/node_modules/pkijs/build/index.es.js
+@@ -4567,7 +4567,7 @@ class EncryptedContentInfo extends PkiObject {
+             this.encryptedContent = parameters.encryptedContent;
+             if ((this.encryptedContent.idBlock.tagClass === 1) &&
+                 (this.encryptedContent.idBlock.tagNumber === 4)) {
+-                if (this.encryptedContent.idBlock.isConstructed === false && !parameters.disableSplit) {
++                if (this.encryptedContent.idBlock.isConstructed === false && !parameters.disableSplit && false) {
+                     const constrString = new asn1js.OctetString({
+                         idBlock: { isConstructed: true },
+                         isConstructed: true
+@@ -6401,7 +6401,7 @@ class CryptoEngine extends AbstractCryptoEngine {
+         const ivBuffer = new ArrayBuffer(16);
+         const ivView = new Uint8Array(ivBuffer);
+         this.getRandomValues(ivView);
+-        const saltBuffer = new ArrayBuffer(64);
++        const saltBuffer = new ArrayBuffer(32);
+         const saltView = new Uint8Array(saltBuffer);
+         this.getRandomValues(saltView);
+         const contentView = new Uint8Array(parameters.contentToEncrypt);
+diff --git a/node_modules/pkijs/build/index.js b/node_modules/pkijs/build/index.js
+index 806a550..1150d50 100644
+--- a/node_modules/pkijs/build/index.js
++++ b/node_modules/pkijs/build/index.js
+@@ -4593,7 +4593,7 @@ class EncryptedContentInfo extends PkiObject {
+             this.encryptedContent = parameters.encryptedContent;
+             if ((this.encryptedContent.idBlock.tagClass === 1) &&
+                 (this.encryptedContent.idBlock.tagNumber === 4)) {
+-                if (this.encryptedContent.idBlock.isConstructed === false && !parameters.disableSplit) {
++                if (this.encryptedContent.idBlock.isConstructed === false && !parameters.disableSplit && false) {
+                     const constrString = new asn1js__namespace.OctetString({
+                         idBlock: { isConstructed: true },
+                         isConstructed: true
+@@ -6427,7 +6427,7 @@ class CryptoEngine extends AbstractCryptoEngine {
+         const ivBuffer = new ArrayBuffer(16);
+         const ivView = new Uint8Array(ivBuffer);
+         this.getRandomValues(ivView);
+-        const saltBuffer = new ArrayBuffer(64);
++        const saltBuffer = new ArrayBuffer(32);
+         const saltView = new Uint8Array(saltBuffer);
+         this.getRandomValues(saltView);
+         const contentView = new Uint8Array(parameters.contentToEncrypt);
