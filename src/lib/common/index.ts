@@ -47,7 +47,6 @@ export const CERTIFICATE_PEM_REGEXP = new RegExp(
 	'^\\n*-{5}BEGIN CERTIFICATE-{5}\\n([A-Za-z0-9+/=]+\\n)+-{5}END CERTIFICATE-{5}\\n*$',
 	''
 );
-export const PRINTABLE_ASCII_CHARACTERS_REGEXP = new RegExp('^[\x20-\x7E]*$', '');
 
 // Settings defines application settings.
 export type Settings = {
