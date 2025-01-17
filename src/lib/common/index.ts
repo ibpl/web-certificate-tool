@@ -330,9 +330,9 @@ export async function resetEnvironment() {
 	settingsInitialized.set(false);
 }
 
-// bufferToHex convert buffer to lowercase hex string separated with ":".
-export function bufferToHex(buffer: ArrayBuffer) {
-	return [...new Uint8Array(buffer)].map((b) => b.toString(16).padStart(2, '0')).join(':');
+// uint8ArrayToHex converts Uint8Array to lowercase hex string separated with ":".
+export function uint8ArrayToHex(array: Uint8Array) {
+	return [...array].map((b) => b.toString(16).padStart(2, '0')).join(':');
 }
 
 // formatPEM formats string to have each line length equal to 64 octets.
@@ -375,8 +375,10 @@ export async function getKeyIdentifier(
 	const crypto = getCrypto(true);
 	const publicKeyBinary = await crypto.exportKey('spki', kp.publicKey);
 	const publicKeyInfo = new PublicKeyInfo({ schema: fromBER(publicKeyBinary).result });
-	return bufferToHex(
-		await crypto.digest(algorithm, publicKeyInfo.subjectPublicKey.valueBlock.valueHexView)
+	return uint8ArrayToHex(
+		new Uint8Array(
+			await crypto.digest(algorithm, publicKeyInfo.subjectPublicKey.valueBlock.valueHexView)
+		)
 	);
 }
 
@@ -415,7 +417,7 @@ export async function getKeyType(kp: CryptoKeyPair): Promise<string> {
 }
 
 // downloadFile makes browser to download file with given name, content type and content.
-export function downloadFile(filename: string, contentType: string, content: ArrayBuffer) {
+export function downloadFile(filename: string, contentType: string, content: Uint8Array) {
 	const file = new File([content], filename, { type: contentType });
 	FileSaver.saveAs(file);
 }
@@ -582,7 +584,7 @@ export async function downloadPKCS12(
 	});
 
 	// Download prepared PKCS #12 content to file.
-	downloadFile(filename, 'application/pkcs12', pkcs12.toSchema().toBER(false));
+	downloadFile(filename, 'application/pkcs12', new Uint8Array(pkcs12.toSchema().toBER(false)));
 }
 
 // readFile reads specified file content (with mac and wiondows newlines

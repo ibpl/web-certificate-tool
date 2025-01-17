@@ -16,7 +16,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 	import {
 		readFileAsText,
 		fromPEM,
-		bufferToHex,
+		uint8ArrayToHex,
 		downloadPKCS12,
 		getKeyIdentifier,
 		CERTIFICATE_PEM_REGEXP
@@ -75,7 +75,7 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 					moment(certificate.notBefore.value).utc().format('YYYY-MM-DD HH:mm:ss') + ' UTC';
 				crtInvalidAfter =
 					moment(certificate.notAfter.value).utc().format('YYYY-MM-DD HH:mm:ss') + ' UTC';
-				crtSerialNumber = bufferToHex(certificate.serialNumber.valueBlock.valueHexView);
+				crtSerialNumber = uint8ArrayToHex(certificate.serialNumber.valueBlock.valueHexView);
 
 				// Certificate cannot be expired.
 				if (new Date() > certificate.notAfter.value) {
