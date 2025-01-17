@@ -168,8 +168,6 @@ SPDX-FileCopyrightText: 2024 Informatyka Boguslawski sp. z o.o. sp.k. <https://w
 		try {
 			const keyIdentifierSha256 = await getKeyIdentifier(keyPair, 'SHA-256');
 
-			$snackbarMessage = t.get('dashboard.pleaseWaitFewMinutes');
-
 			await downloadPKCS12(
 				keyPair,
 				certificate,
