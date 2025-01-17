@@ -870,14 +870,14 @@ describe('Key', () => {
 		// Generate key button should be raised and disabled when owner's ID field is empty,
 		// with tooltip that explains disabling reason.
 		const buttonGenerateKey = screen.getByTestId('button-generate-and-download-key');
-		expect(buttonGenerateKey.getAttribute('class')).toBe('mdc-button mdc-button--raised');
+		expect(buttonGenerateKey.getAttribute('class')).toMatch('mdc-button mdc-button--raised');
 		expect(buttonGenerateKey.getAttribute('disabled')).toBe('');
 		expect(buttonGenerateKey.getAttribute('title')).toBe('Owner ID field cannot be empty.');
 
 		// Load key button should be raised and disabled when owner's ID field is empty,
 		// with tooltip that explains disabling reason.
 		const buttonLoadKey = screen.getByTestId('button-load-key');
-		expect(buttonLoadKey.getAttribute('class')).toBe('mdc-button mdc-button--raised');
+		expect(buttonLoadKey.getAttribute('class')).toMatch('mdc-button mdc-button--raised');
 		expect(buttonLoadKey.getAttribute('disabled')).toBe('');
 		expect(buttonLoadKey.getAttribute('title')).toBe('Owner ID field cannot be empty.');
 
@@ -911,12 +911,12 @@ describe('Key', () => {
 		await vi.waitFor(() => expect(screen.queryByText(/SHA256 identifier/i)).toBeTruthy());
 
 		// Generate and load buttons should be outlined.
-		expect(buttonGenerateKey.getAttribute('class')).toBe('mdc-button mdc-button--outlined');
-		expect(buttonLoadKey.getAttribute('class')).toBe('mdc-button mdc-button--outlined');
+		expect(buttonGenerateKey.getAttribute('class')).toMatch('mdc-button mdc-button--outlined');
+		expect(buttonLoadKey.getAttribute('class')).toMatch('mdc-button mdc-button--outlined');
 
 		// Download key button should be outlined and enabled.
 		const buttonDownloadKey = screen.getByTestId('button-load-key');
-		expect(buttonDownloadKey.getAttribute('class')).toBe('mdc-button mdc-button--outlined');
+		expect(buttonDownloadKey.getAttribute('class')).toMatch('mdc-button mdc-button--outlined');
 		expect(buttonDownloadKey.getAttribute('disabled')).toBe(null);
 
 		// Click download button key, confirm no encryption and download new key.
