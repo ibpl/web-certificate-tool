@@ -108,3 +108,8 @@ h6 {
 caption {
 	@include typography.typography('caption');
 }
+
+// Remove after https://github.com/hperrin/svelte-material-ui/issues/586 is fixed.
+:root {
+	--mdc-theme-text-disabled-on-light: rgba(255, 255, 255, 0.5);
+}
